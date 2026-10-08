@@ -1,1 +1,0 @@
-CREATE POLICY "Service manages dish searches" ON public.dish_searches FOR ALL TO service_role USING (true) WITH CHECK (true);
