@@ -46,6 +46,8 @@ function hashSeed(input: string): number {
 }
 
 export interface ImageRecipeLike {
+  id?: string | null;
+  image_source?: string | null;
   slug?: string | null;
   name: string;
   cuisine?: string | null;

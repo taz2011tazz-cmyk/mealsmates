@@ -8,7 +8,7 @@ export const featuredRecipesQuery = () =>
       const { data, error } = await supabase
         .from("recipes")
         .select(
-          "id,slug,name,image_url,cooking_time_minutes,cuisine,category,diet_tags,calories,difficulty",
+          "id,slug,name,image_url,image_source,cooking_time_minutes,cuisine,category,diet_tags,calories,difficulty",
         )
         .order("created_at", { ascending: false })
         .limit(12);
@@ -24,7 +24,7 @@ export const trendingRecipesQuery = () =>
       const { data, error } = await supabase
         .from("recipes")
         .select(
-          "id,slug,name,image_url,cooking_time_minutes,cuisine,category,diet_tags,calories,difficulty",
+          "id,slug,name,image_url,image_source,cooking_time_minutes,cuisine,category,diet_tags,calories,difficulty",
         )
         .order("created_at", { ascending: false })
         .limit(8);
@@ -39,7 +39,7 @@ export const southAfricanFavoritesQuery = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("recipes")
-        .select("id,slug,name,image_url")
+        .select("id,slug,name,image_url,image_source")
         .or(
           "category.eq.South African Favorites,country.ilike.%south africa%,cuisine.ilike.%south african%",
         )
@@ -56,7 +56,7 @@ export const recipesByCategoryQuery = (category: string | undefined, search = ""
       let q = supabase
         .from("recipes")
         .select(
-          "id,slug,name,image_url,cooking_time_minutes,cuisine,category,diet_tags,country",
+          "id,slug,name,image_url,image_source,cooking_time_minutes,cuisine,category,diet_tags,country",
         )
         .order("created_at", { ascending: false })
         .limit(60);
