@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      ad_placements: {
+        Row: {
+          advertiser: string | null
+          body: string | null
+          created_at: string
+          cta_label: string | null
+          ends_at: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          slot: string
+          starts_at: string | null
+          target_url: string | null
+          title: string
+          updated_at: string
+          weight: number
+        }
+        Insert: {
+          advertiser?: string | null
+          body?: string | null
+          created_at?: string
+          cta_label?: string | null
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          slot: string
+          starts_at?: string | null
+          target_url?: string | null
+          title: string
+          updated_at?: string
+          weight?: number
+        }
+        Update: {
+          advertiser?: string | null
+          body?: string | null
+          created_at?: string
+          cta_label?: string | null
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          slot?: string
+          starts_at?: string | null
+          target_url?: string | null
+          title?: string
+          updated_at?: string
+          weight?: number
+        }
+        Relationships: []
+      }
       announcements: {
         Row: {
           body: string
@@ -822,7 +873,11 @@ export type Database = {
           height_cm: number | null
           id: string
           locale: string
+          onboarding_completed: boolean
           post_count: number
+          preferences: Json
+          theme: string
+          tour_completed: boolean
           updated_at: string
           username: string | null
           weight_kg: number | null
@@ -846,7 +901,11 @@ export type Database = {
           height_cm?: number | null
           id: string
           locale?: string
+          onboarding_completed?: boolean
           post_count?: number
+          preferences?: Json
+          theme?: string
+          tour_completed?: boolean
           updated_at?: string
           username?: string | null
           weight_kg?: number | null
@@ -870,7 +929,11 @@ export type Database = {
           height_cm?: number | null
           id?: string
           locale?: string
+          onboarding_completed?: boolean
           post_count?: number
+          preferences?: Json
+          theme?: string
+          tour_completed?: boolean
           updated_at?: string
           username?: string | null
           weight_kg?: number | null
@@ -1415,6 +1478,7 @@ export type Database = {
           placed_at: string
           promotion_code: string | null
           promotion_id: string | null
+          rejection_reason: string | null
           restaurant_id: string
           status: Database["public"]["Enums"]["restaurant_order_status"]
           subtotal: number
@@ -1443,6 +1507,7 @@ export type Database = {
           placed_at?: string
           promotion_code?: string | null
           promotion_id?: string | null
+          rejection_reason?: string | null
           restaurant_id: string
           status?: Database["public"]["Enums"]["restaurant_order_status"]
           subtotal: number
@@ -1471,6 +1536,7 @@ export type Database = {
           placed_at?: string
           promotion_code?: string | null
           promotion_id?: string | null
+          rejection_reason?: string | null
           restaurant_id?: string
           status?: Database["public"]["Enums"]["restaurant_order_status"]
           subtotal?: number
@@ -1647,15 +1713,20 @@ export type Database = {
       }
       restaurants: {
         Row: {
+          address: string | null
           approval_status: Database["public"]["Enums"]["restaurant_approval_status"]
           avg_rating: number | null
+          business_registration: string | null
           cover_image_url: string | null
           created_at: string
           cuisine: string | null
           currency: string
           delivery_estimate_minutes: number | null
           delivery_fee: number | null
+          delivery_radius_km: number
           description: string | null
+          email: string | null
+          food_photos: Json
           id: string
           is_accepting_orders: boolean
           is_demo: boolean
@@ -1663,26 +1734,36 @@ export type Database = {
           logo_url: string | null
           min_order_amount: number | null
           name: string
+          opening_hours: Json
           owner_id: string
+          owner_name: string | null
           pause_message: string | null
           paused_until: string | null
+          payment_info: Json
+          phone: string | null
           price_range: string | null
           rating_count: number
           slug: string
           supports_delivery: boolean
           supports_pickup: boolean
           updated_at: string
+          whatsapp: string | null
         }
         Insert: {
+          address?: string | null
           approval_status?: Database["public"]["Enums"]["restaurant_approval_status"]
           avg_rating?: number | null
+          business_registration?: string | null
           cover_image_url?: string | null
           created_at?: string
           cuisine?: string | null
           currency?: string
           delivery_estimate_minutes?: number | null
           delivery_fee?: number | null
+          delivery_radius_km?: number
           description?: string | null
+          email?: string | null
+          food_photos?: Json
           id?: string
           is_accepting_orders?: boolean
           is_demo?: boolean
@@ -1690,26 +1771,36 @@ export type Database = {
           logo_url?: string | null
           min_order_amount?: number | null
           name: string
+          opening_hours?: Json
           owner_id: string
+          owner_name?: string | null
           pause_message?: string | null
           paused_until?: string | null
+          payment_info?: Json
+          phone?: string | null
           price_range?: string | null
           rating_count?: number
           slug: string
           supports_delivery?: boolean
           supports_pickup?: boolean
           updated_at?: string
+          whatsapp?: string | null
         }
         Update: {
+          address?: string | null
           approval_status?: Database["public"]["Enums"]["restaurant_approval_status"]
           avg_rating?: number | null
+          business_registration?: string | null
           cover_image_url?: string | null
           created_at?: string
           cuisine?: string | null
           currency?: string
           delivery_estimate_minutes?: number | null
           delivery_fee?: number | null
+          delivery_radius_km?: number
           description?: string | null
+          email?: string | null
+          food_photos?: Json
           id?: string
           is_accepting_orders?: boolean
           is_demo?: boolean
@@ -1717,88 +1808,131 @@ export type Database = {
           logo_url?: string | null
           min_order_amount?: number | null
           name?: string
+          opening_hours?: Json
           owner_id?: string
+          owner_name?: string | null
           pause_message?: string | null
           paused_until?: string | null
+          payment_info?: Json
+          phone?: string | null
           price_range?: string | null
           rating_count?: number
           slug?: string
           supports_delivery?: boolean
           supports_pickup?: boolean
           updated_at?: string
+          whatsapp?: string | null
         }
         Relationships: []
       }
       subscription_events: {
         Row: {
+          actor_id: string | null
           created_at: string
           event_type: string
           id: string
           payload: Json
           processed_at: string | null
           rc_event_id: string | null
+          source: string
+          subscription_id: string | null
           user_id: string | null
         }
         Insert: {
+          actor_id?: string | null
           created_at?: string
           event_type: string
           id?: string
           payload: Json
           processed_at?: string | null
           rc_event_id?: string | null
+          source?: string
+          subscription_id?: string | null
           user_id?: string | null
         }
         Update: {
+          actor_id?: string | null
           created_at?: string
           event_type?: string
           id?: string
           payload?: Json
           processed_at?: string | null
           rc_event_id?: string | null
+          source?: string
+          subscription_id?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "subscription_events_subscription_id_fkey"
+            columns: ["subscription_id"]
+            isOneToOne: false
+            referencedRelation: "subscriptions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscriptions: {
         Row: {
+          auto_renew: boolean
+          cancelled_at: string | null
           created_at: string
+          environment: string | null
           external_customer_id: string | null
           external_subscription_id: string | null
           id: string
+          is_manual: boolean
           period_end: string | null
           period_start: string | null
           product_id: string | null
+          rc_app_user_id: string | null
+          rc_original_transaction_id: string | null
           status: Database["public"]["Enums"]["subscription_status"]
           store: Database["public"]["Enums"]["subscription_store"]
           tier: Database["public"]["Enums"]["subscription_tier"]
+          trial_end: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          auto_renew?: boolean
+          cancelled_at?: string | null
           created_at?: string
+          environment?: string | null
           external_customer_id?: string | null
           external_subscription_id?: string | null
           id?: string
+          is_manual?: boolean
           period_end?: string | null
           period_start?: string | null
           product_id?: string | null
+          rc_app_user_id?: string | null
+          rc_original_transaction_id?: string | null
           status?: Database["public"]["Enums"]["subscription_status"]
           store: Database["public"]["Enums"]["subscription_store"]
           tier?: Database["public"]["Enums"]["subscription_tier"]
+          trial_end?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          auto_renew?: boolean
+          cancelled_at?: string | null
           created_at?: string
+          environment?: string | null
           external_customer_id?: string | null
           external_subscription_id?: string | null
           id?: string
+          is_manual?: boolean
           period_end?: string | null
           period_start?: string | null
           product_id?: string | null
+          rc_app_user_id?: string | null
+          rc_original_transaction_id?: string | null
           status?: Database["public"]["Enums"]["subscription_status"]
           store?: Database["public"]["Enums"]["subscription_store"]
           tier?: Database["public"]["Enums"]["subscription_tier"]
+          trial_end?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1845,7 +1979,9 @@ export type Database = {
           count: number
           created_at: string
           feature: string
+          feature_key: string
           id: string
+          period_key: string
           period_start: string
           updated_at: string
           user_id: string
@@ -1854,7 +1990,9 @@ export type Database = {
           count?: number
           created_at?: string
           feature: string
+          feature_key: string
           id?: string
+          period_key: string
           period_start: string
           updated_at?: string
           user_id: string
@@ -1863,7 +2001,9 @@ export type Database = {
           count?: number
           created_at?: string
           feature?: string
+          feature_key?: string
           id?: string
+          period_key?: string
           period_start?: string
           updated_at?: string
           user_id?: string
@@ -1900,7 +2040,9 @@ export type Database = {
           completed_at: string | null
           created_at: string
           id: string
+          period_key: string
           progress: number
+          updated_at: string
           user_id: string
         }
         Insert: {
@@ -1908,7 +2050,9 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           id?: string
+          period_key: string
           progress?: number
+          updated_at?: string
           user_id: string
         }
         Update: {
@@ -1916,7 +2060,9 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           id?: string
+          period_key?: string
           progress?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -1952,7 +2098,9 @@ export type Database = {
           created_at: string
           current_level: number
           current_streak: number
+          elite_reward_claimed_at: string | null
           id: string
+          last_active_date: string | null
           longest_streak: number
           total_xp: number
           updated_at: string
@@ -1962,7 +2110,9 @@ export type Database = {
           created_at?: string
           current_level?: number
           current_streak?: number
+          elite_reward_claimed_at?: string | null
           id?: string
+          last_active_date?: string | null
           longest_streak?: number
           total_xp?: number
           updated_at?: string
@@ -1972,7 +2122,9 @@ export type Database = {
           created_at?: string
           current_level?: number
           current_streak?: number
+          elite_reward_claimed_at?: string | null
           id?: string
+          last_active_date?: string | null
           longest_streak?: number
           total_xp?: number
           updated_at?: string
@@ -1984,6 +2136,7 @@ export type Database = {
         Row: {
           action: string
           created_at: string
+          dedupe_key: string
           id: string
           metadata: Json
           points: number
@@ -1993,6 +2146,7 @@ export type Database = {
         Insert: {
           action: string
           created_at?: string
+          dedupe_key: string
           id?: string
           metadata?: Json
           points: number
@@ -2002,6 +2156,7 @@ export type Database = {
         Update: {
           action?: string
           created_at?: string
+          dedupe_key?: string
           id?: string
           metadata?: Json
           points?: number

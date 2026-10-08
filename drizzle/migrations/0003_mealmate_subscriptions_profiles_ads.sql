@@ -50,3 +50,53 @@ ALTER TABLE public.restaurant_orders
 UPDATE public.restaurant_orders SET order_number=COALESCE(order_number,'MM-'||upper(substr(replace(id::text,'-',''),1,12)));
 ALTER TABLE public.restaurant_orders ALTER COLUMN order_number SET NOT NULL;
 CREATE UNIQUE INDEX IF NOT EXISTS restaurant_orders_order_number_uq ON public.restaurant_orders(order_number);
+
+DROP POLICY IF EXISTS "Public reads profiles" ON public.profiles;
+REVOKE SELECT ON public.profiles FROM anon;
+DROP POLICY IF EXISTS "Public reads dish searches" ON public.dish_searches;
+REVOKE SELECT ON public.dish_searches FROM anon;
+REVOKE SELECT ON public.dish_searches FROM authenticated;
+CREATE POLICY "Service manages dish searches" ON public.dish_searches FOR ALL TO service_role USING (true) WITH CHECK (true);
+
+ALTER TABLE public.profiles
+  ADD COLUMN IF NOT EXISTS preferences jsonb NOT NULL DEFAULT '{}'::jsonb,
+  ADD COLUMN IF NOT EXISTS onboarding_completed boolean NOT NULL DEFAULT false;
+
+CREATE TABLE IF NOT EXISTS public.ad_placements (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  slot text NOT NULL,
+  title text NOT NULL,
+  body text,
+  image_url text,
+  cta_label text,
+  target_url text,
+  advertiser text,
+  weight integer NOT NULL DEFAULT 1,
+  is_active boolean NOT NULL DEFAULT true,
+  starts_at timestamptz,
+  ends_at timestamptz,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+GRANT SELECT ON public.ad_placements TO anon;
+GRANT SELECT ON public.ad_placements TO authenticated;
+GRANT ALL ON public.ad_placements TO service_role;
+
+ALTER TABLE public.ad_placements ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Anyone reads active placements" ON public.ad_placements;
+CREATE POLICY "Anyone reads active placements"
+  ON public.ad_placements FOR SELECT
+  TO anon, authenticated
+  USING (is_active = true);
+
+DROP TRIGGER IF EXISTS update_ad_placements_updated_at ON public.ad_placements;
+CREATE TRIGGER update_ad_placements_updated_at
+  BEFORE UPDATE ON public.ad_placements
+  FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
+
+CREATE INDEX IF NOT EXISTS ad_placements_slot_idx ON public.ad_placements (slot) WHERE is_active;
+
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS theme text NOT NULL DEFAULT 'classic';
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS tour_completed boolean NOT NULL DEFAULT false;
