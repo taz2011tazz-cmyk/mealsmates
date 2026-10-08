@@ -15,6 +15,13 @@
       "when": 1791429314788,
       "tag": "0001_mealmate_security_hardening",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791429371158,
+      "tag": "0002_mealmate_marketplace_upgrade",
+      "breakpoints": true
     }
   ]
 }
