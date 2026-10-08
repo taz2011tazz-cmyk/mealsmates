@@ -242,6 +242,7 @@ function AdminPage() {
 
         <TabsContent value="overview" className="mt-4">
           <OverviewTab {...(analytics.data ? { analytics: analytics.data } : {})} loading={analytics.isLoading} />
+          <div className="mt-4"><RecipeImageBackfillCard /></div>
         </TabsContent>
         <TabsContent value="users" className="mt-4">
           <UsersTab {...(analytics.data ? { analytics: analytics.data } : {})} loading={analytics.isLoading} />
