@@ -14,16 +14,1840 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      announcements: {
+        Row: {
+          body: string
+          created_at: string
+          created_by: string | null
+          id: string
+          title: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          created_at: string
+          id: string
+          ip_address: string | null
+          metadata: Json
+          target_id: string | null
+          target_table: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata: Json
+          target_id?: string | null
+          target_table?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json
+          target_id?: string | null
+          target_table?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      challenges: {
+        Row: {
+          action: string
+          code: string
+          created_at: string
+          description: string | null
+          goal: number
+          id: string
+          is_active: boolean
+          kind: string
+          premium_only: boolean
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          action: string
+          code: string
+          created_at?: string
+          description?: string | null
+          goal: number
+          id?: string
+          is_active?: boolean
+          kind: string
+          premium_only?: boolean
+          title: string
+          xp_reward: number
+        }
+        Update: {
+          action?: string
+          code?: string
+          created_at?: string
+          description?: string | null
+          goal?: number
+          id?: string
+          is_active?: boolean
+          kind?: string
+          premium_only?: boolean
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
+      dish_searches: {
+        Row: {
+          count: number
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          count?: number
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          count?: number
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          recipe_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          recipe_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          recipe_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feature_flags: {
+        Row: {
+          description: string | null
+          enabled: boolean
+          key: string
+          rollout_percent: number
+          updated_at: string
+        }
+        Insert: {
+          description?: string | null
+          enabled?: boolean
+          key: string
+          rollout_percent: number
+          updated_at?: string
+        }
+        Update: {
+          description?: string | null
+          enabled?: boolean
+          key?: string
+          rollout_percent?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      grocery_items: {
+        Row: {
+          category: string | null
+          checked: boolean
+          created_at: string
+          id: string
+          name: string
+          quantity: string | null
+          recipe_id: string | null
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          checked?: boolean
+          created_at?: string
+          id?: string
+          name: string
+          quantity?: string | null
+          recipe_id?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          checked?: boolean
+          created_at?: string
+          id?: string
+          name?: string
+          quantity?: string | null
+          recipe_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grocery_items_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hashtags: {
+        Row: {
+          created_at: string
+          id: string
+          tag: string
+          usage_count: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          tag: string
+          usage_count?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          tag?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
+      meal_plans: {
+        Row: {
+          created_at: string
+          custom_name: string | null
+          id: string
+          meal_type: string
+          plan_date: string
+          recipe_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          custom_name?: string | null
+          id?: string
+          meal_type: string
+          plan_date: string
+          recipe_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          custom_name?: string | null
+          id?: string
+          meal_type?: string
+          plan_date?: string
+          recipe_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plans_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      menu_items: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          image_url: string | null
+          is_available: boolean
+          is_hidden: boolean
+          menu_id: string | null
+          name: string
+          price: number
+          restaurant_id: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          is_hidden?: boolean
+          menu_id?: string | null
+          name: string
+          price: number
+          restaurant_id: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean
+          is_hidden?: boolean
+          menu_id?: string | null
+          name?: string
+          price?: number
+          restaurant_id?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "menu_items_menu_id_fkey"
+            columns: ["menu_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_menus"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "menu_items_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nutrition_logs: {
+        Row: {
+          calories: number | null
+          carbs_g: number | null
+          created_at: string
+          fat_g: number | null
+          id: string
+          logged_at: string
+          meal_type: string | null
+          name: string
+          protein_g: number | null
+          recipe_id: string | null
+          servings: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          calories?: number | null
+          carbs_g?: number | null
+          created_at?: string
+          fat_g?: number | null
+          id?: string
+          logged_at?: string
+          meal_type?: string | null
+          name: string
+          protein_g?: number | null
+          recipe_id?: string | null
+          servings?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          calories?: number | null
+          carbs_g?: number | null
+          created_at?: string
+          fat_g?: number | null
+          id?: string
+          logged_at?: string
+          meal_type?: string | null
+          name?: string
+          protein_g?: number | null
+          recipe_id?: string | null
+          servings?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nutrition_logs_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          menu_item_id: string | null
+          name: string
+          notes: string | null
+          order_id: string
+          quantity: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          menu_item_id?: string | null
+          name: string
+          notes?: string | null
+          order_id: string
+          quantity: number
+          unit_price: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          menu_item_id?: string | null
+          name?: string
+          notes?: string | null
+          order_id?: string
+          quantity?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_menu_item_id_fkey"
+            columns: ["menu_item_id"]
+            isOneToOne: false
+            referencedRelation: "menu_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "restaurant_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pantry_items: {
+        Row: {
+          category: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          name: string
+          quantity: string | null
+          source: string | null
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          name: string
+          quantity?: string | null
+          source?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          name?: string
+          quantity?: string | null
+          source?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      payments: {
+        Row: {
+          amount_usd: number | null
+          created_at: string
+          currency: string | null
+          id: string
+          kind: Database["public"]["Enums"]["payment_kind"]
+          occurred_at: string
+          raw: Json | null
+          rc_event_id: string | null
+          subscription_id: string | null
+          user_id: string
+        }
+        Insert: {
+          amount_usd?: number | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["payment_kind"]
+          occurred_at?: string
+          raw?: Json | null
+          rc_event_id?: string | null
+          subscription_id?: string | null
+          user_id: string
+        }
+        Update: {
+          amount_usd?: number | null
+          created_at?: string
+          currency?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["payment_kind"]
+          occurred_at?: string
+          raw?: Json | null
+          rc_event_id?: string | null
+          subscription_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      post_comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_hidden: boolean
+          like_count: number
+          parent_comment_id: string | null
+          post_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          like_count?: number
+          parent_comment_id?: string | null
+          post_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_hidden?: boolean
+          like_count?: number
+          parent_comment_id?: string | null
+          post_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_hashtags: {
+        Row: {
+          hashtag_id: string
+          post_id: string
+        }
+        Insert: {
+          hashtag_id: string
+          post_id: string
+        }
+        Update: {
+          hashtag_id?: string
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_hashtags_hashtag_id_fkey"
+            columns: ["hashtag_id"]
+            isOneToOne: false
+            referencedRelation: "hashtags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_hashtags_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_likes: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      post_saves: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_saves_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          caption: string | null
+          category: string | null
+          comment_count: number
+          created_at: string
+          cuisine: string | null
+          id: string
+          ingredients: Json
+          instructions: Json
+          is_hidden: boolean
+          like_count: number
+          media_type: Database["public"]["Enums"]["media_type"] | null
+          media_url: string | null
+          post_type: Database["public"]["Enums"]["post_type"]
+          recipe_id: string | null
+          save_count: number
+          share_count: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          caption?: string | null
+          category?: string | null
+          comment_count?: number
+          created_at?: string
+          cuisine?: string | null
+          id?: string
+          ingredients?: Json
+          instructions?: Json
+          is_hidden?: boolean
+          like_count?: number
+          media_type?: Database["public"]["Enums"]["media_type"] | null
+          media_url?: string | null
+          post_type?: Database["public"]["Enums"]["post_type"]
+          recipe_id?: string | null
+          save_count?: number
+          share_count?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          caption?: string | null
+          category?: string | null
+          comment_count?: number
+          created_at?: string
+          cuisine?: string | null
+          id?: string
+          ingredients?: Json
+          instructions?: Json
+          is_hidden?: boolean
+          like_count?: number
+          media_type?: Database["public"]["Enums"]["media_type"] | null
+          media_url?: string | null
+          post_type?: Database["public"]["Enums"]["post_type"]
+          recipe_id?: string | null
+          save_count?: number
+          share_count?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      premium_features: {
+        Row: {
+          created_at: string
+          description: string | null
+          key: string
+          label: string
+          min_tier: Database["public"]["Enums"]["subscription_tier"]
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          key: string
+          label: string
+          min_tier: Database["public"]["Enums"]["subscription_tier"]
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          key?: string
+          label?: string
+          min_tier?: Database["public"]["Enums"]["subscription_tier"]
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          activity_level: string | null
+          age: number | null
+          allergies: string[] | null
+          avatar_url: string | null
+          bio: string | null
+          budget_per_day: number | null
+          cover_image_url: string | null
+          created_at: string
+          currency: string
+          dietary_preferences: string[] | null
+          display_name: string | null
+          family_size: number | null
+          follower_count: number
+          following_count: number
+          goal: string | null
+          height_cm: number | null
+          id: string
+          locale: string
+          post_count: number
+          updated_at: string
+          username: string | null
+          weight_kg: number | null
+        }
+        Insert: {
+          activity_level?: string | null
+          age?: number | null
+          allergies?: string[] | null
+          avatar_url?: string | null
+          bio?: string | null
+          budget_per_day?: number | null
+          cover_image_url?: string | null
+          created_at?: string
+          currency?: string
+          dietary_preferences?: string[] | null
+          display_name?: string | null
+          family_size?: number | null
+          follower_count?: number
+          following_count?: number
+          goal?: string | null
+          height_cm?: number | null
+          id: string
+          locale?: string
+          post_count?: number
+          updated_at?: string
+          username?: string | null
+          weight_kg?: number | null
+        }
+        Update: {
+          activity_level?: string | null
+          age?: number | null
+          allergies?: string[] | null
+          avatar_url?: string | null
+          bio?: string | null
+          budget_per_day?: number | null
+          cover_image_url?: string | null
+          created_at?: string
+          currency?: string
+          dietary_preferences?: string[] | null
+          display_name?: string | null
+          family_size?: number | null
+          follower_count?: number
+          following_count?: number
+          goal?: string | null
+          height_cm?: number | null
+          id?: string
+          locale?: string
+          post_count?: number
+          updated_at?: string
+          username?: string | null
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
+      promo_codes: {
+        Row: {
+          code: string
+          created_at: string
+          created_by: string | null
+          enabled: boolean
+          expires_at: string | null
+          id: string
+          max_redemptions: number | null
+          notes: string | null
+          redemption_count: number
+          reward_kind: Database["public"]["Enums"]["promo_reward_kind"]
+          reward_value: number
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          created_by?: string | null
+          enabled?: boolean
+          expires_at?: string | null
+          id?: string
+          max_redemptions?: number | null
+          notes?: string | null
+          redemption_count?: number
+          reward_kind?: Database["public"]["Enums"]["promo_reward_kind"]
+          reward_value: number
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          enabled?: boolean
+          expires_at?: string | null
+          id?: string
+          max_redemptions?: number | null
+          notes?: string | null
+          redemption_count?: number
+          reward_kind?: Database["public"]["Enums"]["promo_reward_kind"]
+          reward_value?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      promo_redemptions: {
+        Row: {
+          code_id: string
+          granted_days: number
+          granted_lifetime: boolean
+          id: string
+          redeemed_at: string
+          user_id: string
+        }
+        Insert: {
+          code_id: string
+          granted_days?: number
+          granted_lifetime?: boolean
+          id?: string
+          redeemed_at?: string
+          user_id: string
+        }
+        Update: {
+          code_id?: string
+          granted_days?: number
+          granted_lifetime?: boolean
+          id?: string
+          redeemed_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promo_redemptions_code_id_fkey"
+            columns: ["code_id"]
+            isOneToOne: false
+            referencedRelation: "promo_codes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rate_limits: {
+        Row: {
+          bucket: string
+          count: number
+          created_at: string
+          id: string
+          identifier: string
+          window_start: string
+        }
+        Insert: {
+          bucket: string
+          count?: number
+          created_at?: string
+          id?: string
+          identifier: string
+          window_start: string
+        }
+        Update: {
+          bucket?: string
+          count?: number
+          created_at?: string
+          id?: string
+          identifier?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
+      recently_viewed: {
+        Row: {
+          id: string
+          recipe_id: string
+          user_id: string
+          viewed_at: string
+        }
+        Insert: {
+          id?: string
+          recipe_id: string
+          user_id: string
+          viewed_at?: string
+        }
+        Update: {
+          id?: string
+          recipe_id?: string
+          user_id?: string
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recently_viewed_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recipe_ratings: {
+        Row: {
+          created_at: string
+          id: string
+          rating: number
+          recipe_id: string
+          review: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rating: number
+          recipe_id: string
+          review?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rating?: number
+          recipe_id?: string
+          review?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recipe_ratings_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recipes: {
+        Row: {
+          avg_rating: number | null
+          calories: number | null
+          carbs_g: number | null
+          category: string | null
+          cooking_time_minutes: number | null
+          country: string | null
+          created_at: string
+          created_by: string | null
+          cuisine: string | null
+          description: string | null
+          diet_tags: string[] | null
+          difficulty: string | null
+          fat_g: number | null
+          fun_fact: string | null
+          id: string
+          image_url: string | null
+          ingredients: Json
+          is_featured: boolean | null
+          meal_type: string | null
+          name: string
+          protein_g: number | null
+          rating_count: number | null
+          servings: number | null
+          slug: string
+          steps: Json
+          updated_at: string
+        }
+        Insert: {
+          avg_rating?: number | null
+          calories?: number | null
+          carbs_g?: number | null
+          category?: string | null
+          cooking_time_minutes?: number | null
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          cuisine?: string | null
+          description?: string | null
+          diet_tags?: string[] | null
+          difficulty?: string | null
+          fat_g?: number | null
+          fun_fact?: string | null
+          id?: string
+          image_url?: string | null
+          ingredients?: Json
+          is_featured?: boolean | null
+          meal_type?: string | null
+          name: string
+          protein_g?: number | null
+          rating_count?: number | null
+          servings?: number | null
+          slug: string
+          steps?: Json
+          updated_at?: string
+        }
+        Update: {
+          avg_rating?: number | null
+          calories?: number | null
+          carbs_g?: number | null
+          category?: string | null
+          cooking_time_minutes?: number | null
+          country?: string | null
+          created_at?: string
+          created_by?: string | null
+          cuisine?: string | null
+          description?: string | null
+          diet_tags?: string[] | null
+          difficulty?: string | null
+          fat_g?: number | null
+          fun_fact?: string | null
+          id?: string
+          image_url?: string | null
+          ingredients?: Json
+          is_featured?: boolean | null
+          meal_type?: string | null
+          name?: string
+          protein_g?: number | null
+          rating_count?: number | null
+          servings?: number | null
+          slug?: string
+          steps?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      referral_codes: {
+        Row: {
+          code: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          referred_id: string
+          referrer_id: string
+          reward_days: number
+          rewarded_at: string | null
+          status: Database["public"]["Enums"]["referral_status"]
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          referred_id: string
+          referrer_id: string
+          reward_days?: number
+          rewarded_at?: string | null
+          status?: Database["public"]["Enums"]["referral_status"]
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          referred_id?: string
+          referrer_id?: string
+          reward_days?: number
+          rewarded_at?: string | null
+          status?: Database["public"]["Enums"]["referral_status"]
+        }
+        Relationships: []
+      }
+      restaurant_applications: {
+        Row: {
+          admin_notes: string | null
+          applicant_id: string
+          created_at: string
+          id: string
+          rejection_reason: string | null
+          requested_changes: string | null
+          restaurant_id: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["restaurant_approval_status"]
+          submitted_data: Json
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          applicant_id: string
+          created_at?: string
+          id?: string
+          rejection_reason?: string | null
+          requested_changes?: string | null
+          restaurant_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["restaurant_approval_status"]
+          submitted_data: Json
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          applicant_id?: string
+          created_at?: string
+          id?: string
+          rejection_reason?: string | null
+          requested_changes?: string | null
+          restaurant_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["restaurant_approval_status"]
+          submitted_data?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      restaurant_locations: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: string
+          label: string | null
+          latitude: number
+          longitude: number
+          restaurant_id: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          label?: string | null
+          latitude: number
+          longitude: number
+          restaurant_id: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          label?: string | null
+          latitude?: number
+          longitude?: number
+          restaurant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_locations_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_menus: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          restaurant_id: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          restaurant_id: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          restaurant_id?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_menus_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_orders: {
+        Row: {
+          completed_at: string | null
+          contact_phone: string | null
+          created_at: string
+          currency: string
+          customer_id: string
+          delivery_address: string | null
+          delivery_fee: number
+          id: string
+          notes: string | null
+          order_number: string
+          placed_at: string
+          restaurant_id: string
+          status: Database["public"]["Enums"]["restaurant_order_status"]
+          subtotal: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          completed_at?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          currency?: string
+          customer_id: string
+          delivery_address?: string | null
+          delivery_fee: number
+          id?: string
+          notes?: string | null
+          order_number: string
+          placed_at?: string
+          restaurant_id: string
+          status?: Database["public"]["Enums"]["restaurant_order_status"]
+          subtotal: number
+          total: number
+          updated_at?: string
+        }
+        Update: {
+          completed_at?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          currency?: string
+          customer_id?: string
+          delivery_address?: string | null
+          delivery_fee?: number
+          id?: string
+          notes?: string | null
+          order_number?: string
+          placed_at?: string
+          restaurant_id?: string
+          status?: Database["public"]["Enums"]["restaurant_order_status"]
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_orders_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+          restaurant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          restaurant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          restaurant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_reviews_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurant_staff: {
+        Row: {
+          created_at: string
+          id: string
+          restaurant_id: string
+          role: Database["public"]["Enums"]["restaurant_staff_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          restaurant_id: string
+          role?: Database["public"]["Enums"]["restaurant_staff_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          restaurant_id?: string
+          role?: Database["public"]["Enums"]["restaurant_staff_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "restaurant_staff_restaurant_id_fkey"
+            columns: ["restaurant_id"]
+            isOneToOne: false
+            referencedRelation: "restaurants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      restaurants: {
+        Row: {
+          approval_status: Database["public"]["Enums"]["restaurant_approval_status"]
+          avg_rating: number | null
+          cover_image_url: string | null
+          created_at: string
+          cuisine: string | null
+          currency: string
+          delivery_estimate_minutes: number | null
+          delivery_fee: number | null
+          description: string | null
+          id: string
+          is_accepting_orders: boolean
+          is_demo: boolean
+          is_verified: boolean
+          logo_url: string | null
+          min_order_amount: number | null
+          name: string
+          owner_id: string
+          price_range: string | null
+          rating_count: number
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          approval_status?: Database["public"]["Enums"]["restaurant_approval_status"]
+          avg_rating?: number | null
+          cover_image_url?: string | null
+          created_at?: string
+          cuisine?: string | null
+          currency?: string
+          delivery_estimate_minutes?: number | null
+          delivery_fee?: number | null
+          description?: string | null
+          id?: string
+          is_accepting_orders?: boolean
+          is_demo?: boolean
+          is_verified?: boolean
+          logo_url?: string | null
+          min_order_amount?: number | null
+          name: string
+          owner_id: string
+          price_range?: string | null
+          rating_count?: number
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          approval_status?: Database["public"]["Enums"]["restaurant_approval_status"]
+          avg_rating?: number | null
+          cover_image_url?: string | null
+          created_at?: string
+          cuisine?: string | null
+          currency?: string
+          delivery_estimate_minutes?: number | null
+          delivery_fee?: number | null
+          description?: string | null
+          id?: string
+          is_accepting_orders?: boolean
+          is_demo?: boolean
+          is_verified?: boolean
+          logo_url?: string | null
+          min_order_amount?: number | null
+          name?: string
+          owner_id?: string
+          price_range?: string | null
+          rating_count?: number
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      subscription_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          payload: Json
+          processed_at: string | null
+          rc_event_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          payload: Json
+          processed_at?: string | null
+          rc_event_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          payload?: Json
+          processed_at?: string | null
+          rc_event_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string
+          external_customer_id: string | null
+          external_subscription_id: string | null
+          id: string
+          period_end: string | null
+          period_start: string | null
+          product_id: string | null
+          status: Database["public"]["Enums"]["subscription_status"]
+          store: Database["public"]["Enums"]["subscription_store"]
+          tier: Database["public"]["Enums"]["subscription_tier"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          external_customer_id?: string | null
+          external_subscription_id?: string | null
+          id?: string
+          period_end?: string | null
+          period_start?: string | null
+          product_id?: string | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          store: Database["public"]["Enums"]["subscription_store"]
+          tier?: Database["public"]["Enums"]["subscription_tier"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          external_customer_id?: string | null
+          external_subscription_id?: string | null
+          id?: string
+          period_end?: string | null
+          period_start?: string | null
+          product_id?: string | null
+          status?: Database["public"]["Enums"]["subscription_status"]
+          store?: Database["public"]["Enums"]["subscription_store"]
+          tier?: Database["public"]["Enums"]["subscription_tier"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      telemetry_events: {
+        Row: {
+          created_at: string
+          error: string | null
+          id: string
+          kind: string
+          latency_ms: number | null
+          metadata: Json
+          name: string
+          success: boolean
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind: string
+          latency_ms?: number | null
+          metadata?: Json
+          name: string
+          success?: boolean
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind?: string
+          latency_ms?: number | null
+          metadata?: Json
+          name?: string
+          success?: boolean
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      usage_limits: {
+        Row: {
+          count: number
+          created_at: string
+          feature: string
+          id: string
+          period_start: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          count?: number
+          created_at?: string
+          feature: string
+          id?: string
+          period_start: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          count?: number
+          created_at?: string
+          feature?: string
+          id?: string
+          period_start?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_challenges: {
+        Row: {
+          challenge_id: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          progress: number
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          progress?: number
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          progress?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenges_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_stats: {
+        Row: {
+          created_at: string
+          current_level: number
+          current_streak: number
+          id: string
+          longest_streak: number
+          total_xp: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_level?: number
+          current_streak?: number
+          id?: string
+          longest_streak?: number
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_level?: number
+          current_streak?: number
+          id?: string
+          longest_streak?: number
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      xp_events: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          metadata: Json
+          points: number
+          source_id: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          points: number
+          source_id?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          points?: number
+          source_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_access_order: {
+        Args: { _order_id: string; _user_id: string }
+        Returns: boolean
+      }
+      check_rate_limit: {
+        Args: { _bucket: string; _identifier: string; _max_per_minute: number }
+        Returns: boolean
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Returns: boolean
+      }
+      increment_dish_search: { Args: { _name: string }; Returns: number }
+      is_premium: { Args: { _user_id: string }; Returns: boolean }
+      is_restaurant_member: {
+        Args: { _restaurant_id: string; _user_id: string }
+        Returns: boolean
+      }
+      recalc_recipe_rating: { Args: { _recipe_id: string }; Returns: undefined }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      media_type: "image" | "video"
+      payment_kind: "initial" | "renewal" | "trial_conversion" | "refund"
+      post_type: "recipe_share" | "photo" | "video" | "tip"
+      promo_reward_kind:
+        | "percent_discount"
+        | "free_days"
+        | "free_month"
+        | "free_year"
+        | "lifetime"
+      referral_status: "pending" | "rewarded" | "void"
+      restaurant_approval_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "suspended"
+        | "changes_requested"
+      restaurant_order_status:
+        | "new"
+        | "accepted"
+        | "preparing"
+        | "ready"
+        | "out_for_delivery"
+        | "completed"
+        | "cancelled"
+      restaurant_staff_role: "owner" | "manager" | "staff"
+      subscription_status:
+        | "trialing"
+        | "active"
+        | "in_grace"
+        | "paused"
+        | "expired"
+        | "cancelled"
+      subscription_store:
+        | "app_store"
+        | "play_store"
+        | "stripe"
+        | "promo"
+        | "admin"
+      subscription_tier: "free" | "monthly" | "annual" | "lifetime" | "promo"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +1974,52 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      media_type: ["image", "video"],
+      payment_kind: ["initial", "renewal", "trial_conversion", "refund"],
+      post_type: ["recipe_share", "photo", "video", "tip"],
+      promo_reward_kind: [
+        "percent_discount",
+        "free_days",
+        "free_month",
+        "free_year",
+        "lifetime",
+      ],
+      referral_status: ["pending", "rewarded", "void"],
+      restaurant_approval_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "suspended",
+        "changes_requested",
+      ],
+      restaurant_order_status: [
+        "new",
+        "accepted",
+        "preparing",
+        "ready",
+        "out_for_delivery",
+        "completed",
+        "cancelled",
+      ],
+      restaurant_staff_role: ["owner", "manager", "staff"],
+      subscription_status: [
+        "trialing",
+        "active",
+        "in_grace",
+        "paused",
+        "expired",
+        "cancelled",
+      ],
+      subscription_store: [
+        "app_store",
+        "play_store",
+        "stripe",
+        "promo",
+        "admin",
+      ],
+      subscription_tier: ["free", "monthly", "annual", "lifetime", "promo"],
+    },
   },
 } as const
