@@ -1784,27 +1784,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      can_access_order: {
-        Args: { _order_id: string; _user_id: string }
-        Returns: boolean
-      }
       check_rate_limit: {
         Args: { _bucket: string; _identifier: string; _max_per_minute: number }
         Returns: boolean
       }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Returns: boolean
-      }
       increment_dish_search: { Args: { _name: string }; Returns: number }
       is_premium: { Args: { _user_id: string }; Returns: boolean }
-      is_restaurant_member: {
-        Args: { _restaurant_id: string; _user_id: string }
-        Returns: boolean
-      }
       recalc_recipe_rating: { Args: { _recipe_id: string }; Returns: undefined }
     }
     Enums: {

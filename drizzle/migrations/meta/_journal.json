@@ -8,6 +8,13 @@
       "when": 1791428030729,
       "tag": "0000_mealmate_core_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791429314788,
+      "tag": "0001_mealmate_security_hardening",
+      "breakpoints": true
     }
   ]
 }
