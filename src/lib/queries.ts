@@ -96,7 +96,7 @@ export const myFavoritesQuery = () =>
       const { data, error } = await supabase
         .from("favorites")
         .select(
-          "recipe_id, recipes(id,slug,name,image_url,cooking_time_minutes,cuisine,category)",
+          "recipe_id, recipes(id,slug,name,image_url,image_source,cooking_time_minutes,cuisine,category)",
         );
       if (error) throw error;
       return data ?? [];
@@ -136,7 +136,7 @@ export const myPlannerQuery = (fromISO: string, toISO: string) =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("meal_plans")
-        .select("*, recipes(id,slug,name,image_url,cuisine)")
+        .select("*, recipes(id,slug,name,image_url,image_source,cuisine)")
         .gte("plan_date", fromISO)
         .lte("plan_date", toISO);
       if (error) throw error;
