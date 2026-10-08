@@ -109,7 +109,7 @@ function CookbookPage() {
       const { data, error } = await supabase
         .from("recipes")
         .select(
-          "id,slug,name,image_url,cooking_time_minutes,cuisine,category,servings,ingredients,description,created_by",
+          "id,slug,name,image_url,image_source,cooking_time_minutes,cuisine,category,servings,ingredients,description,created_by",
         )
         .eq("created_by", user!.id)
         .order("created_at", { ascending: false });

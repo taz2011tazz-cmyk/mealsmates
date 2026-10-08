@@ -321,6 +321,30 @@ export type Database = {
         }
         Relationships: []
       }
+      image_search_cache: {
+        Row: {
+          cache_key: string
+          created_at: string
+          provider: string
+          query: string
+          results: Json
+        }
+        Insert: {
+          cache_key: string
+          created_at?: string
+          provider: string
+          query: string
+          results?: Json
+        }
+        Update: {
+          cache_key?: string
+          created_at?: string
+          provider?: string
+          query?: string
+          results?: Json
+        }
+        Relationships: []
+      }
       meal_plans: {
         Row: {
           created_at: string
@@ -1183,6 +1207,13 @@ export type Database = {
           fat_g: number | null
           fun_fact: string | null
           id: string
+          image_attribution: Json | null
+          image_checked_at: string | null
+          image_confidence: number | null
+          image_locked: boolean
+          image_query: string | null
+          image_signature: string | null
+          image_source: string | null
           image_url: string | null
           ingredients: Json
           is_featured: boolean | null
@@ -1211,6 +1242,13 @@ export type Database = {
           fat_g?: number | null
           fun_fact?: string | null
           id?: string
+          image_attribution?: Json | null
+          image_checked_at?: string | null
+          image_confidence?: number | null
+          image_locked?: boolean
+          image_query?: string | null
+          image_signature?: string | null
+          image_source?: string | null
           image_url?: string | null
           ingredients?: Json
           is_featured?: boolean | null
@@ -1239,6 +1277,13 @@ export type Database = {
           fat_g?: number | null
           fun_fact?: string | null
           id?: string
+          image_attribution?: Json | null
+          image_checked_at?: string | null
+          image_confidence?: number | null
+          image_locked?: boolean
+          image_query?: string | null
+          image_signature?: string | null
+          image_source?: string | null
           image_url?: string | null
           ingredients?: Json
           is_featured?: boolean | null

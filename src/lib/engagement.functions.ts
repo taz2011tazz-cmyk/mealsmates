@@ -24,7 +24,7 @@ export const listRecentlyViewed = createServerFn({ method: "GET" })
     const supabase = context.supabase;
     const { data, error } = await supabase
       .from("recently_viewed")
-      .select("viewed_at, recipes(id, slug, name, image_url, cooking_time_minutes, calories)")
+      .select("viewed_at, recipes(id, slug, name, image_url, image_source, cooking_time_minutes, calories)")
       .eq("user_id", context.userId)
       .order("viewed_at", { ascending: false })
       .limit(12);

@@ -39,6 +39,7 @@ import {
 } from "@/lib/admin-analytics.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { RecipeImageBackfillCard } from "@/components/recipe-image-tools";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
@@ -241,6 +242,7 @@ function AdminPage() {
 
         <TabsContent value="overview" className="mt-4">
           <OverviewTab {...(analytics.data ? { analytics: analytics.data } : {})} loading={analytics.isLoading} />
+          <div className="mt-4"><RecipeImageBackfillCard /></div>
         </TabsContent>
         <TabsContent value="users" className="mt-4">
           <UsersTab {...(analytics.data ? { analytics: analytics.data } : {})} loading={analytics.isLoading} />

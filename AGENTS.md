@@ -8,3 +8,4 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+- Recipe photos come from src/lib/recipe-images.server.ts (official image APIs + AI relevance check), stored on the recipe row and cached; never pick unverified images client-side. Why: accuracy and API cost control.
