@@ -65,7 +65,7 @@ export function ChangeImageButton({
   userId,
 }: {
   recipe: { id: string; slug: string; created_by?: string | null };
-  userId?: string;
+  userId?: string | undefined;
 }) {
   const isAdmin = useIsAdmin(userId);
   const canEdit = !!userId && (isAdmin || recipe.created_by === userId);

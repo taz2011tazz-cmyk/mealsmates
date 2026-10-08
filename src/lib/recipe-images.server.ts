@@ -19,7 +19,7 @@ export interface ImageCandidate {
   pageUrl?: string;
   downloadLocation?: string; // Unsplash download tracking endpoint
   metaScore?: number;
-  aiScore?: number;
+  aiScore?: number | undefined;
   score?: number;
 }
 
