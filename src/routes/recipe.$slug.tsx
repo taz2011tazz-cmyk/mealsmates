@@ -183,6 +183,7 @@ function RecipePage() {
         </Link>
 
         <div className="mt-4 grid gap-8 md:grid-cols-2">
+          <div>
           <div className="overflow-hidden rounded-3xl bg-muted">
             <RecipeImage
               recipe={r}
@@ -192,9 +193,10 @@ function RecipePage() {
             />
 
           </div>
-          <div className="-mt-6 md:col-start-1">
+          <div>
             <ImageCredit source={r.image_source} attribution={r.image_attribution} />
             {r.id && <ChangeImageButton recipe={{ id: r.id, slug: r.slug, created_by: r.created_by }} userId={user?.id} />}
+          </div>
           </div>
 
           <div className="flex flex-col">

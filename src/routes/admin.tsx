@@ -39,6 +39,7 @@ import {
 } from "@/lib/admin-analytics.functions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { RecipeImageBackfillCard } from "@/components/recipe-image-tools";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
