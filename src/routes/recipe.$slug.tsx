@@ -26,6 +26,7 @@ const CookingMode = lazy(() =>
   import("@/components/cooking-mode").then((m) => ({ default: m.CookingMode })),
 );
 import { RecipeImage } from "@/components/recipe-image";
+import { ChangeImageButton, ImageCredit } from "@/components/recipe-image-tools";
 import { awardXp } from "@/lib/xp.functions";
 import { useFeatureFlag } from "@/hooks/use-feature-flag";
 import { Button } from "@/components/ui/button";
@@ -190,6 +191,10 @@ function RecipePage() {
               className="aspect-square w-full object-cover"
             />
 
+          </div>
+          <div className="-mt-6 md:col-start-1">
+            <ImageCredit source={r.image_source} attribution={r.image_attribution} />
+            {r.id && <ChangeImageButton recipe={{ id: r.id, slug: r.slug, created_by: r.created_by }} userId={user?.id} />}
           </div>
 
           <div className="flex flex-col">
