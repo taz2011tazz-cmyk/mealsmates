@@ -10,7 +10,7 @@ const CreateManagedRestaurantSchema = z.object({
 });
 const RestaurantIdSchema = z.object({ restaurantId: z.string().uuid() });
 
-async function assertManagedAdmin(context: { userId: string; user: { email?: string | null } }) {
+async function assertManagedAdmin(context: { userId: string }) {
   const { isAdmin } = await import("@/lib/marketplace.server");
   // Admin rights come only from the server-side role table, never from an email match.
   if (!(await isAdmin(context.userId))) {
