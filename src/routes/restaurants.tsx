@@ -38,8 +38,26 @@ export const Route = createFileRoute("/restaurants")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: RestaurantsPage,
+  component: DiningComingSoon,
 });
+
+function DiningComingSoon() {
+  return (
+    <main className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
+      <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+        <Store className="h-8 w-8 text-primary" />
+      </div>
+      <span className="mb-3 rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">Not yet available</span>
+      <h1 className="font-sans text-2xl font-bold text-foreground">Dining is coming soon</h1>
+      <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+        We're still getting restaurants and food delivery ready. Check back soon — in the meantime, explore recipes and plan your meals.
+      </p>
+      <Button asChild className="mt-6"><Link to="/">Back to Home</Link></Button>
+    </main>
+  );
+}
+
+export { RestaurantsPage };
 
 type FilterKey = "all" | "rated" | "fast" | "halal" | "vegetarian" | "deals" | "under100";
 type RestaurantRow = { restaurant: FeedRestaurant; distance: number | null; hasDeal: boolean };
