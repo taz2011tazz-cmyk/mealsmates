@@ -5,3 +5,6 @@
 - [ ] Generate/find recipe images only on explicit user search; never during browsing.
 - [ ] Confirm requested admin account and grant protected admin role if present.
 - [ ] Verify main flows, photos, route metadata and tests.
+- [ ] Restore the previous Home layout and set bottom navigation to Home, Dining, AI Chef, Planner, Profile only.
+- [ ] Test all five tabs, back navigation, AI Chef controls, and Pantry access from AI Chef.
+- [ ] Adapt the supplied personalized onboarding journey to MealMate’s existing account, preferences, and real subscription flow.

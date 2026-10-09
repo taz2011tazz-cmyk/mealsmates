@@ -1,15 +1,14 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, UtensilsCrossed, CalendarDays, User, Refrigerator } from "lucide-react";
+import { Home, UtensilsCrossed, CalendarDays, User } from "lucide-react";
 import { ChefMascot } from "@/components/chef-mascot";
 import { cn } from "@/lib/utils";
 
 /**
- * MealMate 2.0 shell: 4 primary tabs with a raised mascot FAB in the
- * centre that opens the AI companion from anywhere in the app.
+ * Five primary MealMate tabs with the AI chef raised in the centre.
  */
 const LEFT_TABS = [
   { to: "/", icon: Home, label: "Home" },
-  { to: "/pantry", icon: Refrigerator, label: "Pantry" },
+  { to: "/restaurants", icon: UtensilsCrossed, label: "Dining" },
 ] as const;
 
 const RIGHT_TABS = [
@@ -55,7 +54,7 @@ export function BottomNav() {
       aria-label="Primary"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur supports-[backdrop-filter]:bg-background/80"
     >
-      <div className="mx-auto grid max-w-3xl grid-cols-[1fr_1fr_64px_1fr_1fr_1fr] items-end px-2">
+      <div className="mx-auto grid max-w-3xl grid-cols-[1fr_1fr_64px_1fr_1fr] items-end px-2">
         {LEFT_TABS.map((t) => (
           <Tab key={t.to} {...t} active={isActive(t.to)} />
         ))}
@@ -63,11 +62,17 @@ export function BottomNav() {
           to="/chat"
           aria-label="Ask the AI chef"
           data-tour="chef"
-          className="mx-auto -mt-6 flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card shadow-lg ring-4 ring-background transition-transform hover:scale-105 active:scale-95"
+          className={cn(
+            "group relative mx-auto -mt-6 flex min-h-20 w-16 flex-col items-center justify-end gap-1 pb-2 text-[10px] font-semibold transition-colors",
+            isActive("/chat") ? "text-primary" : "text-muted-foreground hover:text-foreground",
+          )}
         >
-          <ChefMascot className="h-12 w-12" />
+          <span className="flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card shadow-lg ring-4 ring-background transition-transform group-hover:scale-105 group-active:scale-95">
+            <ChefMascot className="h-12 w-12" />
+          </span>
+          {isActive("/chat") && <span className="absolute inset-x-3 top-5 h-0.5 rounded-full bg-primary motion-reveal" aria-hidden="true" />}
+          AI Chef
         </Link>
-        <Tab to="/recipes" icon={UtensilsCrossed} label="Discover" active={isActive("/recipes")} />
         {RIGHT_TABS.map((t) => (
           <Tab key={t.to} {...t} active={isActive(t.to)} />
         ))}

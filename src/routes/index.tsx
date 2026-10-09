@@ -1,6 +1,6 @@
 import { RecipeImage } from "@/components/recipe-image";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Sparkles,
@@ -21,7 +21,6 @@ import {
   trendingRecipesQuery,
   southAfricanFavoritesQuery,
   myFavoritesQuery,
-  myPantryQuery,
 } from "@/lib/queries";
 import { surpriseMe, generateRecipe } from "@/lib/ai.functions";
 import { useSession } from "@/hooks/use-session";
@@ -29,11 +28,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { getContinueCooking } from "@/lib/continue-cooking";
 import { TrendingCard } from "@/components/recipe-card";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
-import { CookingInput } from "@/components/cooking-input";
-import { ChefMascot } from "@/components/chef-mascot";
-import { MealMateLogo } from "@/components/mealmate-logo";
-import { pantryRecipeQuery } from "@/lib/pantry-recipe";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlanStatusCard } from "@/components/plan-status-card";
@@ -98,24 +92,14 @@ function Index() {
   const { data: favorites } = useQuery({ ...myFavoritesQuery(), enabled: !!user });
   const [query, setQuery] = useState("");
   const [busy, setBusy] = useState<null | "search" | "surprise">(null);
-  const [continueCooking, setContinueCooking] = useState<ReturnType<typeof getContinueCooking>>(null);
-  const [salutation, setSalutation] = useState("Hello");
-  useEffect(() => { setContinueCooking(getContinueCooking()); setSalutation(greeting()); }, []);
-  const { data: pantry = [] } = useQuery({ ...myPantryQuery(), enabled: !!user });
+  const continueCooking = getContinueCooking();
 
   const favoriteIds = new Set((favorites ?? []).map((f) => f.recipe_id));
 
-  async function findFromPantry() {
-    const pantryQuery = pantryRecipeQuery(pantry.map((item) => item.name));
-    if (!pantryQuery) { navigate({ to: "/pantry" }); return; }
-    if (busy) return;
-    setBusy("search");
-    try {
-      const { slug } = await generateRecipe({ data: { query: pantryQuery } });
-      navigate({ to: "/recipe/$slug", params: { slug } });
-    } catch { toast.error("Couldn't find a recipe right now. Please try again."); }
-    finally { setBusy(null); }
-  }
+  const firstName =
+    (user?.user_metadata?.["full_name"] as string | undefined)?.split(" ")[0] ??
+    user?.email?.split("@")[0] ??
+    "there";
 
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -174,30 +158,63 @@ function Index() {
 
   return (
     <main className="flex-1">
-      <header className="grid grid-cols-[44px_minmax(0,1fr)_44px] items-center gap-3 px-5 pt-5">
-        <ThemeToggle />
-        <Link to="/" className="min-w-0 justify-self-center" aria-label="MealMate home"><MealMateLogo imageClassName="size-8 rounded-none object-contain" /></Link>
-        <Button asChild size="icon" variant="ghost" className="size-11 rounded-full"><Link to="/profile" aria-label="Profile"><UserIcon /></Link></Button>
-      </header>
-      <section className="flex flex-col items-center px-5 pb-7 pt-8 text-center sm:pt-10">
-        <ChefMascot animate className="h-44 w-44 sm:h-52 sm:w-52" />
-        <h1 className="mt-6 font-display text-3xl font-semibold leading-tight sm:text-4xl">{salutation}, Chef.</h1>
-        <p className="mt-3 text-sm text-muted-foreground sm:text-base">Ready to cook something amazing?</p>
-        <Button className="mt-6 h-12 rounded-full px-7" onClick={findFromPantry} disabled={busy !== null}>{busy === "search" ? <Loader2 className="animate-spin" /> : <Sparkles />} Find a recipe</Button>
-      </section>
-      <div className="mx-auto w-full max-w-xl px-5 pb-5">
-        <CookingInput value={query} onChange={setQuery} onSubmit={() => navigate({ to: "/chat", search: { q: query.trim() } })} />
+      {/* Greeting header */}
+      <div className="flex items-center justify-between px-4 pt-6">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            {greeting()}
+          </p>
+          <h1 className="font-display text-4xl leading-tight">
+            Hi {firstName} <span aria-hidden>👋</span>
+          </h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <XpChip />
+          <ThemeToggle />
+          <Link
+            to="/profile"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-secondary-foreground hover:bg-secondary/80"
+            aria-label="Profile"
+          >
+            <UserIcon className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
 
+      {/* Search */}
+      <form onSubmit={handleSearch} className="px-4 pt-6">
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search recipes, ingredients, cuisines…"
+            className="h-14 rounded-full border-none bg-card pl-11 pr-14 text-base shadow-sm"
+          />
+          <button
+            type="submit"
+            disabled={busy !== null}
+            aria-label="Search"
+            className="absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            {busy === "search" ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <SlidersHorizontal className="h-4 w-4" />
+            )}
+          </button>
+        </div>
+      </form>
+
       {/* Category pills */}
-      <section className="px-5 pt-3">
-        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+      <section className="px-4 pt-5">
+        <div className="flex flex-wrap gap-2">
           {CATEGORY_PILLS.map((c) => (
             <Link
               key={c.label}
               to="/recipes"
               search={c.search}
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+              className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
             >
               <span aria-hidden>{c.emoji}</span>
               {c.label}
@@ -205,7 +222,7 @@ function Index() {
           ))}
           <Link
             to="/recipes"
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
           >
             <span aria-hidden>⊞⊞</span>
             More
@@ -213,15 +230,80 @@ function Index() {
         </div>
       </section>
 
-      <section className="grid grid-cols-4 gap-2 px-5 pt-6">
-        {[
-          { to: "/cookbook", icon: Search, label: "Cookbook" },
-          { to: "/list", icon: ShoppingCart, label: "Shopping" },
-          { to: "/coach", icon: HeartPulse, label: "Nutrition" },
-          { to: "/restaurants", icon: Calendar, label: "Dining" },
-        ].map((action) => <Button key={action.to} asChild variant="ghost" className="h-auto min-h-16 flex-col gap-2 rounded-lg px-1 py-3 text-xs"><Link to={action.to}><action.icon className="size-5" />{action.label}</Link></Button>)}
+      {/* Hero cards: AI Kitchen Scan + Surprise Me */}
+      <section className="grid grid-cols-2 gap-3 px-4 pt-6">
+        <Link
+          to="/scan"
+          className="group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-ink p-5 text-background"
+        >
+          <div>
+            <p className="text-[11px] font-medium uppercase tracking-widest text-background/60">
+              AI Kitchen Scan
+            </p>
+            <h2 className="mt-2 font-display text-2xl leading-tight">
+              What's in your kitchen?
+            </h2>
+            <p className="mt-2 text-xs leading-relaxed text-background/70">
+              Point your camera at the fridge or pantry — we'll log every ingredient
+              automatically.
+            </p>
+          </div>
+          <span className="pointer-events-none absolute right-4 top-4 flex h-14 w-14 items-center justify-center rounded-full border border-background/20">
+            <Camera className="h-5 w-5" />
+          </span>
+          <span className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-background px-4 py-2 text-xs font-semibold text-foreground">
+            <Camera className="h-3.5 w-3.5" />
+            Scan now
+          </span>
+        </Link>
+
+        <button
+          type="button"
+          onClick={handleSurprise}
+          disabled={busy !== null}
+          className="group relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-br from-ink via-ink to-primary/40 p-5 text-left text-background"
+        >
+          <div>
+            <Sparkles className="h-4 w-4 text-primary" />
+            <h2 className="mt-2 font-display text-2xl leading-tight text-primary">
+              Surprise Me
+            </h2>
+            <p className="mt-2 text-xs leading-relaxed text-background/70">
+              Get a random recipe made just for you!
+            </p>
+          </div>
+          <span className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-background px-4 py-2 text-xs font-semibold text-foreground">
+            {busy === "surprise" ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Sparkles className="h-3.5 w-3.5" />
+            )}
+            Surprise me
+          </span>
+        </button>
       </section>
-      <div className="px-5 pt-4 text-center"><Button variant="ghost" className="h-11 rounded-full" onClick={handleSurprise} disabled={busy !== null}>{busy === "surprise" ? <Loader2 className="animate-spin" /> : <Sparkles />} Surprise me</Button></div>
+
+      {/* Quick actions */}
+      <section className="grid grid-cols-4 gap-2 px-4 pt-6">
+        {[
+          { to: "/coach", icon: HeartPulse, label: "Nutrition Coach", sub: "Personalized food advice" },
+          { to: "/chat", icon: MessageCircleQuestion, label: "AI Chat", sub: "Ask anything about food" },
+          { to: "/scan", icon: Camera, label: "Scan Ingredients", sub: "Use your camera to scan items" },
+          { to: "/planner", icon: Calendar, label: "Meal Planner", sub: "Plan your meals for the week" },
+        ].map((a) => (
+          <Link
+            key={a.to}
+            to={a.to}
+            className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card px-2 py-4 text-center transition-colors hover:bg-muted"
+          >
+            <a.icon className="h-5 w-5" />
+            <span className="text-xs font-semibold leading-tight">{a.label}</span>
+            <span className="hidden text-[10px] leading-tight text-muted-foreground sm:block">
+              {a.sub}
+            </span>
+          </Link>
+        ))}
+      </section>
 
       {/* Plan status + premium features */}
       <section className="px-4 pt-6">
@@ -376,6 +458,15 @@ function Index() {
         </section>
       )}
 
+      {/* Floating AI assistant */}
+      <Link
+        to="/chat"
+        aria-label="AI Assistant"
+        className="fixed bottom-24 right-4 z-40 flex h-14 w-14 flex-col items-center justify-center gap-0.5 rounded-full bg-ink text-background shadow-lg"
+      >
+        <Sparkles className="h-4 w-4" />
+        <span className="text-[8px] font-medium leading-none">AI</span>
+      </Link>
     </main>
   );
 }

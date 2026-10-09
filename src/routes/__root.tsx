@@ -15,7 +15,6 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { supabase } from "@/integrations/supabase/client";
 import { AppHeader } from "@/components/app-header";
 import { BottomNav } from "@/components/bottom-nav";
-import { MarketplaceBottomNav } from "@/components/restaurant/marketplace-bottom-nav";
 
 import { AuthGate } from "@/components/auth-gate";
 import { MascotThemeProvider } from "@/hooks/use-mascot-theme";
@@ -228,7 +227,7 @@ function RootComponent() {
                   </AuthGate>
                 </div>
               </div>
-              {isMarketplace ? <MarketplaceBottomNav /> : pathname === "/onboarding" ? null : <BottomNav />}
+              {pathname === "/onboarding" ? null : <BottomNav />}
             </div>
             <Toaster position="top-center" />
           </UpgradeModalProvider>
