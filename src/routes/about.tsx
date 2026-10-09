@@ -4,6 +4,10 @@ import { ChevronLeft } from "lucide-react";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "About \u00b7 MealMate" },
+      { property: "og:description", content: "About MealMate." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "About · MealMate" },
       { name: "description", content: "About MealMate." },
     ],
@@ -31,7 +35,7 @@ function AboutPage() {
         </div>
         <div className="flex justify-between px-4 py-3">
           <dt className="text-muted-foreground">Made with</dt>
-          <dd className="font-medium">TanStack Start · Lovable</dd>
+          <dd className="font-medium">MealMate</dd>
         </div>
       </dl>
     </main>

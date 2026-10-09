@@ -13,3 +13,5 @@
 - Pantry management lives on /pantry and shares myPantryQuery with generation controls; this keeps ingredient edits and cooking prompts consistent.
 - Reuse CookingInput for home and AI chef, with visualViewport shell metrics for keyboard clearance; this prevents duplicated camera/pantry navigation and covered inputs.
 - Keep branding logo separate from ChefMascot artwork; this preserves the user logo while making the assistant recognizable.
+
+- RecipeImage renders stored/curated media only; explicit search events call authenticated ensureRecipeImage and bulk backfill stays disabled, preventing browse-driven image costs.

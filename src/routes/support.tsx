@@ -4,6 +4,10 @@ import { ChevronLeft, Mail } from "lucide-react";
 export const Route = createFileRoute("/support")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Support \u00b7 MealMate" },
+      { property: "og:description", content: "Help and answers for MealMate." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Support · MealMate" },
       { name: "description", content: "Help and answers for MealMate." },
     ],

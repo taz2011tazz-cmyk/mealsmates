@@ -32,6 +32,7 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/premium")({
   head: () => ({
     meta: [
+      { name: "twitter:card", content: "summary" },
       { title: "MealMate Premium — Unlimited AI, recipes & meal plans" },
       {
         name: "description",

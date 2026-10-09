@@ -50,6 +50,10 @@ import {
 export const Route = createFileRoute("/cookbook")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Cookbook \u2014 MealMate" },
+      { property: "og:description", content: "Your saved and imported recipes. Import from TikTok, Instagram Reels, YouTube Shorts and more." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Cookbook — MealMate" },
       {
         name: "description",

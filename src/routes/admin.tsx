@@ -71,6 +71,10 @@ const LineTrend = lazy(() =>
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Admin \u2014 MealMate" },
+      { property: "og:description", content: "Manage MealMate: analytics, subscribers, revenue, promo codes." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Admin — MealMate" },
       { name: "description", content: "Manage MealMate: analytics, subscribers, revenue, promo codes." },
       { name: "robots", content: "noindex" },

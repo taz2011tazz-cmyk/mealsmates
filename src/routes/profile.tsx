@@ -39,6 +39,10 @@ import {
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Settings \u2014 MealMate" },
+      { property: "og:description", content: "Manage your MealMate account, currency, language, notifications, and privacy." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Settings — MealMate" },
       {
         name: "description",
