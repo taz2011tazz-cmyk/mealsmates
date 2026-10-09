@@ -15,3 +15,4 @@
 - Keep branding logo separate from ChefMascot artwork; this preserves the user logo while making the assistant recognizable.
 
 - RecipeImage renders stored/curated media only; explicit search events call authenticated ensureRecipeImage and bulk backfill stays disabled, preventing browse-driven image costs.
+- The shared bottom navigation always has exactly Home, Dining, AI Chef, Planner, and Profile; Pantry remains accessible through AI Chef.

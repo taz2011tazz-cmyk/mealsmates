@@ -16,7 +16,8 @@ import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/chat")({
   component: ChatPage,
-  validateSearch: (search: Record<string, unknown>): { q?: string } => ({ q: typeof search["q"] === "string" ? search["q"].slice(0, 200) : undefined }),
+  validateSearch: (search: Record<string, unknown>): { q?: string } =>
+    typeof search["q"] === "string" ? { q: search["q"].slice(0, 200) } : {},
   head: () => ({
     meta: [
       { title: "AI Food Chat & Visual Mode — MealMate" },
