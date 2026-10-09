@@ -4,6 +4,10 @@ import { ChevronLeft } from "lucide-react";
 export const Route = createFileRoute("/legal/terms")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Terms of Service \u00b7 MealMate" },
+      { property: "og:description", content: "The rules for using MealMate." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Terms of Service · MealMate" },
       { name: "description", content: "The rules for using MealMate." },
     ],

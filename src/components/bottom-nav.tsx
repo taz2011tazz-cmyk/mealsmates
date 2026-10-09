@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, UtensilsCrossed, CalendarDays, User, ChefHat } from "lucide-react";
+import { Home, UtensilsCrossed, CalendarDays, User, Refrigerator } from "lucide-react";
+import { ChefMascot } from "@/components/chef-mascot";
 import { cn } from "@/lib/utils";
 
 /**
@@ -8,7 +9,7 @@ import { cn } from "@/lib/utils";
  */
 const LEFT_TABS = [
   { to: "/", icon: Home, label: "Home" },
-  { to: "/restaurants", icon: UtensilsCrossed, label: "Dining" },
+  { to: "/pantry", icon: Refrigerator, label: "Pantry" },
 ] as const;
 
 const RIGHT_TABS = [
@@ -33,7 +34,7 @@ function Tab({
       aria-label={label}
       data-tour={label.toLowerCase()}
       className={cn(
-        "group relative flex flex-col items-center gap-1 rounded-xl px-2 py-2 text-[10px] font-semibold transition-colors",
+        "group relative flex flex-col items-center gap-1 rounded-xl min-h-14 min-w-0 px-1 py-2 text-[10px] font-semibold transition-colors",
         active ? "text-primary" : "text-muted-foreground hover:text-foreground",
       )}
     >
@@ -54,7 +55,7 @@ export function BottomNav() {
       aria-label="Primary"
       className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur supports-[backdrop-filter]:bg-background/80"
     >
-      <div className="mx-auto grid max-w-3xl grid-cols-5 items-end px-2">
+      <div className="mx-auto grid max-w-3xl grid-cols-[1fr_1fr_64px_1fr_1fr_1fr] items-end px-2">
         {LEFT_TABS.map((t) => (
           <Tab key={t.to} {...t} active={isActive(t.to)} />
         ))}
@@ -64,8 +65,9 @@ export function BottomNav() {
           data-tour="chef"
           className="mx-auto -mt-6 flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card shadow-lg ring-4 ring-background transition-transform hover:scale-105 active:scale-95"
         >
-          <ChefHat className="h-6 w-6 text-primary" />
+          <ChefMascot className="h-12 w-12" />
         </Link>
+        <Tab to="/recipes" icon={UtensilsCrossed} label="Discover" active={isActive("/recipes")} />
         {RIGHT_TABS.map((t) => (
           <Tab key={t.to} {...t} active={isActive(t.to)} />
         ))}

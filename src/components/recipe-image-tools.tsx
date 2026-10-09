@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { backfillRecipeImages, chooseRecipeImage, getImageAlternatives } from "@/lib/recipe-images.functions";
+import { chooseRecipeImage, getImageAlternatives } from "@/lib/recipe-images.functions";
 
 type Attribution = { photographer?: string | null; photographerUrl?: string | null; pageUrl?: string | null } | null;
 
@@ -156,44 +156,5 @@ export function ChangeImageButton({
   );
 }
 
-/** Admin tool: fix missing or low-confidence recipe photos in small batches. */
-export function RecipeImageBackfillCard() {
-  const run = useServerFn(backfillRecipeImages);
-  const [busy, setBusy] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
-
-  async function go() {
-    setBusy(true);
-    setStatus(null);
-    try {
-      let remaining = Infinity;
-      let updated = 0;
-      for (let i = 0; i < 10 && remaining > 0; i++) {
-        const res = await run({ data: { batchSize: 5 } });
-        if (res.reason === "no_provider") {
-          setStatus("No photo service is connected yet.");
-          return;
-        }
-        updated += res.updated;
-        remaining = res.remaining;
-        setStatus(`Updated ${updated} so far · ${remaining} still need a photo`);
-        if (res.processed === 0) break;
-      }
-    } catch (e) {
-      setStatus(e instanceof Error ? e.message : "Backfill failed");
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  return (
-    <div className="rounded-2xl border border-border bg-card p-4">
-      <h3 className="font-semibold">Recipe photos</h3>
-      <p className="mt-1 text-sm text-muted-foreground">Find accurate photos for recipes that are missing one or have a weak match.</p>
-      <Button size="sm" className="mt-3" onClick={go} disabled={busy}>
-        {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Fix recipe photos
-      </Button>
-      {status && <p className="mt-2 text-xs text-muted-foreground">{status}</p>}
-    </div>
-  );
-}
+/** Bulk image work disabled: image discovery happens only on a user search. */
+export function RecipeImageBackfillCard() { return null; }

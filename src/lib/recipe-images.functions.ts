@@ -22,13 +22,15 @@ async function assertCanEdit(userId: string, createdBy: string | null) {
 }
 
 /**
- * Called when a recipe is shown without a verified photo. Uses the stored image
- * when it is trustworthy; otherwise searches once and saves the result.
- * Safe to call from public pages: work is cached per recipe and rate limited.
+ * Explicit user search only. Never call from page loaders or image rendering.
+ * Uses a cached verified photo, otherwise finds and stores a matching photo.
  */
 export const ensureRecipeImage = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator((v: unknown) => IdSchema.parse(v))
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    const { data: accessible, error } = await context.supabase.from("recipes").select("id").eq("id", data.recipeId).maybeSingle();
+    if (error || !accessible) throw new Error("Recipe not found");
     const srv = await import("@/lib/recipe-images.server");
     const r = await loadRecipe(data.recipeId);
     const signature = srv.recipeSignature(r);
@@ -102,41 +104,14 @@ export const chooseRecipeImage = createServerFn({ method: "POST" })
     return { imageUrl: pick.url };
   });
 
-/** Admin backfill: processes a small batch of recipes missing a verified photo. */
+/** Kept for compatibility; bulk generation is disabled by user preference. */
 export const backfillRecipeImages = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((v: unknown) => z.object({ batchSize: z.number().int().min(1).max(10).default(5) }).parse(v ?? {}))
   .handler(async ({ data, context }) => {
     const { isAdmin } = await import("@/lib/marketplace.server");
     if (!(await isAdmin(context.userId))) throw new Error("Admin access required");
-    const srv = await import("@/lib/recipe-images.server");
-    if (srv.configuredProviders().length === 0) return { processed: 0, updated: 0, remaining: 0, reason: "no_provider" };
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: rows, error } = await supabaseAdmin
-      .from("recipes")
-      .select(RECIPE_COLS)
-      .eq("image_locked", false)
-      .or(`image_source.is.null,image_confidence.lt.${srv.ACCEPT_THRESHOLD}`)
-      .order("image_checked_at", { ascending: true, nullsFirst: true })
-      .limit(data.batchSize * 3);
-    if (error) throw error;
-    const todo = (rows ?? []).filter((r) => srv.needsSearch(r, srv.recipeSignature(r))).slice(0, data.batchSize);
-    let updated = 0;
-    for (const r of todo) {
-      const signature = srv.recipeSignature(r);
-      await srv.markChecked(r.id, signature);
-      const res = await srv.findBestImage(r);
-      if (res.best && res.query) {
-        await srv.saveImage(r.id, res.best, res.query, { signature });
-        updated++;
-      }
-    }
-    const { count } = await supabaseAdmin
-      .from("recipes")
-      .select("id", { count: "exact", head: true })
-      .eq("image_locked", false)
-      .or(`image_source.is.null,image_confidence.lt.${srv.ACCEPT_THRESHOLD}`);
-    return { processed: todo.length, updated, remaining: Math.max(0, (count ?? 0) - updated), reason: null };
+    return { processed: 0, updated: 0, remaining: 0, reason: "search_only" };
   });
 
 export const imageProvidersStatus = createServerFn({ method: "GET" }).handler(async () => {

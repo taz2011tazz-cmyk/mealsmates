@@ -131,43 +131,13 @@ export function curatedRecipeImageUrl(
   return null;
 }
 
-/** Lovable's curated category image for recipes without a dedicated asset. */
-export function generatedImageUrl(r: ImageRecipeLike, _size: ImageSize = "card"): string {
-  return categoryFallbackUrl(r);
-}
-
-/**
- * Resolve the URL to render. Prefers the stored image (so each recipe keeps its
- * own validated photo), but downsizes generated renditions to the size actually
- * needed — a 160px card never downloads a 1200px file.
- */
+/** Neutral placeholder: never substitute a photograph of a different dish. */
+export const NEUTRAL_RECIPE_PLACEHOLDER = "/recipe-placeholder.svg";
+export function generatedImageUrl(_r: ImageRecipeLike, _size: ImageSize = "card"): string { return NEUTRAL_RECIPE_PLACEHOLDER; }
 export function recipeImageUrl(r: ImageRecipeLike, size: ImageSize = "card"): string {
-  const curated = curatedRecipeImageUrl(r, size);
-  if (curated) return curated;
-  return categoryFallbackUrl(r);
+  return (r.image_source && r.image_url ? r.image_url : null) ?? curatedRecipeImageUrl(r, size) ?? NEUTRAL_RECIPE_PLACEHOLDER;
 }
-
-/**
- * Real, CDN-hosted photos used as a guaranteed last resort so a recipe card
- * never renders an empty/broken image while a generated photo is unavailable.
- */
-import dinnerFb from "@/assets/recipes/fallback/dinner.jpg.asset.json";
-import lunchFb from "@/assets/recipes/fallback/lunch.jpg.asset.json";
-import breakfastFb from "@/assets/recipes/fallback/breakfast.jpg.asset.json";
-import dessertFb from "@/assets/recipes/fallback/dessert.jpg.asset.json";
-import snackFb from "@/assets/recipes/fallback/snack.jpg.asset.json";
-import vegFb from "@/assets/recipes/fallback/veg.jpg.asset.json";
-
-export function categoryFallbackUrl(r: ImageRecipeLike): string {
-  const hay = `${r.name} ${r.category ?? ""} ${r.cuisine ?? ""}`.toLowerCase();
-  if (/dessert|pudding|cake|pie|tart|brownie|cookie|ice cream/.test(hay)) return dessertFb.url;
-  if (/breakfast|pancake|waffle|omelette|egg|porridge|oats|french toast/.test(hay))
-    return breakfastFb.url;
-  if (/snack|bread|muffin|baking|scone|biscuit|smoothie/.test(hay)) return snackFb.url;
-  if (/vegan|vegetarian|salad|bowl|veggie|tofu|plant/.test(hay)) return vegFb.url;
-  if (/lunch|sandwich|wrap|burger|kota|bunny chow|toastie/.test(hay)) return lunchFb.url;
-  return dinnerFb.url;
-}
+export function categoryFallbackUrl(_r: ImageRecipeLike): string { return NEUTRAL_RECIPE_PLACEHOLDER; }
 
 /** onError handler: fall back to the dish-matched photo, then a real category photo. */
 export function imageFallback(r: ImageRecipeLike, size: ImageSize = "card") {

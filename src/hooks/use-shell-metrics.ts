@@ -15,7 +15,17 @@ export function useShellMetrics(mode: ShellMode) {
       root.style.setProperty("--app-nav-h", `${navHeight}px`);
     };
 
+    const viewport = window.visualViewport;
+    const updateKeyboard = () => {
+      const inset = viewport ? Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop) : 0;
+      const open = inset > 120;
+      root.dataset["keyboard"] = open ? "open" : "closed";
+      root.style.setProperty("--keyboard-inset", `${open ? inset : 0}px`);
+    };
     update();
+    updateKeyboard();
+    viewport?.addEventListener("resize", updateKeyboard);
+    viewport?.addEventListener("scroll", updateKeyboard);
     const observer = new ResizeObserver(update);
     if (header) observer.observe(header);
     if (nav) observer.observe(nav);
@@ -23,6 +33,8 @@ export function useShellMetrics(mode: ShellMode) {
 
     return () => {
       observer.disconnect();
+      viewport?.removeEventListener("resize", updateKeyboard);
+      viewport?.removeEventListener("scroll", updateKeyboard);
       window.removeEventListener("resize", update);
     };
   }, [mode]);

@@ -5,6 +5,8 @@ import { Search, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { recipesByCategoryQuery } from "@/lib/queries";
 import { generateRecipe, surpriseMe } from "@/lib/ai.functions";
+import { ensureRecipeImage } from "@/lib/recipe-images.functions";
+import { useServerFn } from "@tanstack/react-start";
 import { RecipeCard } from "@/components/recipe-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,11 +57,24 @@ function RecipesPage() {
   );
   const [query, setQuery] = useState(q ?? "");
   const [busy, setBusy] = useState(false);
+  const findImage = useServerFn(ensureRecipeImage);
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
     if (!query.trim() || busy) return;
-    navigate({ to: "/recipes", search: { ...(active !== "All" ? { c: active } : {}), q: query.trim() } });
+    const term = query.trim();
+    setBusy(true);
+    try {
+      await navigate({ to: "/recipes", search: { ...(active !== "All" ? { c: active } : {}), q: term } });
+      const matches = await Route.router.options.context.queryClient.fetchQuery(recipesByCategoryQuery(active !== "All" ? active : undefined, term));
+      for (const recipe of matches.slice(0, 6)) {
+        if (recipe.image_source && recipe.image_url) continue;
+        const result = await findImage({ data: { recipeId: recipe.id } });
+        if (result.reason === "no_provider" || result.reason === "rate_limited") break;
+      }
+      await Route.router.options.context.queryClient.invalidateQueries({ queryKey: ["recipes"] });
+    } catch { toast.error("Couldn't complete the search. Please try again."); }
+    finally { setBusy(false); }
   }
 
   async function handleAiGenerate() {

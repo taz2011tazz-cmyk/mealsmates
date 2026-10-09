@@ -21,6 +21,7 @@ import { Route as GroceryRouteImport } from './routes/grocery'
 import { Route as ListRouteImport } from './routes/list'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as OrdersRouteImport } from './routes/orders'
+import { Route as PantryRouteImport } from './routes/pantry'
 import { Route as PartnerRouteImport } from './routes/partner'
 import { Route as PlannerRouteImport } from './routes/planner'
 import { Route as PremiumRouteImport } from './routes/premium'
@@ -99,6 +100,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
 const OrdersRoute = OrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PantryRoute = PantryRouteImport.update({
+  id: '/pantry',
+  path: '/pantry',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PartnerRoute = PartnerRouteImport.update({
@@ -211,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/list': typeof ListRoute
   '/onboarding': typeof OnboardingRoute
   '/orders': typeof OrdersRoute
+  '/pantry': typeof PantryRoute
   '/partner': typeof PartnerRouteWithChildren
   '/planner': typeof PlannerRoute
   '/premium': typeof PremiumRoute
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/list': typeof ListRoute
   '/onboarding': typeof OnboardingRoute
   '/orders': typeof OrdersRoute
+  '/pantry': typeof PantryRoute
   '/partner': typeof PartnerRouteWithChildren
   '/planner': typeof PlannerRoute
   '/premium': typeof PremiumRoute
@@ -278,6 +286,7 @@ export interface FileRoutesById {
   '/list': typeof ListRoute
   '/onboarding': typeof OnboardingRoute
   '/orders': typeof OrdersRoute
+  '/pantry': typeof PantryRoute
   '/partner': typeof PartnerRouteWithChildren
   '/planner': typeof PlannerRoute
   '/premium': typeof PremiumRoute
@@ -313,6 +322,7 @@ export interface FileRouteTypes {
     | '/list'
     | '/onboarding'
     | '/orders'
+    | '/pantry'
     | '/partner'
     | '/planner'
     | '/premium'
@@ -346,6 +356,7 @@ export interface FileRouteTypes {
     | '/list'
     | '/onboarding'
     | '/orders'
+    | '/pantry'
     | '/partner'
     | '/planner'
     | '/premium'
@@ -379,6 +390,7 @@ export interface FileRouteTypes {
     | '/list'
     | '/onboarding'
     | '/orders'
+    | '/pantry'
     | '/partner'
     | '/planner'
     | '/premium'
@@ -413,6 +425,7 @@ export interface RootRouteChildren {
   ListRoute: typeof ListRoute
   OnboardingRoute: typeof OnboardingRoute
   OrdersRoute: typeof OrdersRoute
+  PantryRoute: typeof PantryRoute
   PartnerRoute: typeof PartnerRouteWithChildren
   PlannerRoute: typeof PlannerRoute
   PremiumRoute: typeof PremiumRoute
@@ -516,6 +529,13 @@ declare module '@tanstack/react-router' {
       path: '/orders'
       fullPath: '/orders'
       preLoaderRoute: typeof OrdersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pantry': {
+      id: '/pantry'
+      path: '/pantry'
+      fullPath: '/pantry'
+      preLoaderRoute: typeof PantryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/partner': {
@@ -688,6 +708,7 @@ const rootRouteChildren: RootRouteChildren = {
   ListRoute: ListRoute,
   OnboardingRoute: OnboardingRoute,
   OrdersRoute: OrdersRoute,
+  PantryRoute: PantryRoute,
   PartnerRoute: PartnerRouteWithChildren,
   PlannerRoute: PlannerRoute,
   PremiumRoute: PremiumRoute,
