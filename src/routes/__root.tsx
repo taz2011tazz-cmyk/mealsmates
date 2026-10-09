@@ -121,8 +121,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "MealMate generates authentic recipes from around the world with AI, plans your week, and builds your grocery list. From pap and chakalaka to global classics." },
       { property: "og:description", content: "MealMate generates authentic recipes from around the world with AI, plans your week, and builds your grocery list. From pap and chakalaka to global classics." },
       { name: "twitter:description", content: "MealMate generates authentic recipes from around the world with AI, plans your week, and builds your grocery list. From pap and chakalaka to global classics." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/4iT0BKXaImfx8JUyziQgQ6AvHez2/social-images/social-1783155623309-1000454250.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/4iT0BKXaImfx8JUyziQgQ6AvHez2/social-images/social-1783155623309-1000454250.webp" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -135,7 +133,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // plus the upright serif display face. swap keeps text visible immediately.
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap",
       },
     ],
   }),

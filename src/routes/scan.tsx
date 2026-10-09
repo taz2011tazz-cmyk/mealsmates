@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 
 export const Route = createFileRoute("/scan")({
+  validateSearch: (search: Record<string, unknown>): { mode?: "ingredients" | "dish" } => ({ mode: search["mode"] === "ingredients" ? "ingredients" : "dish" }),
   head: () => ({
     meta: [
       { title: "Food Scanner – MealMate" },
@@ -71,7 +72,8 @@ function ScanPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const inputRef = useRef<HTMLInputElement>(null);
-  const [mode, setMode] = useState<Mode>("dish");
+  const search = Route.useSearch();
+  const [mode, setMode] = useState<Mode>(search.mode ?? "dish");
   const [preview, setPreview] = useState<string | null>(null);
   const [items, setItems] = useState<ScannedItem[] | null>(null);
   const [dish, setDish] = useState<ScannedDish | null>(null);

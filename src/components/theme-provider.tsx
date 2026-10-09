@@ -18,7 +18,7 @@ function systemPref(): ResolvedTheme {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-const DARK_APP_ICON = "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/file_00000000a36c81f8b4fffeafdc65d6a2-FOrsF6KRQeSU2lpiLAhmNK89JDZVeZ.png";
+const DARK_APP_ICON = "/favicon.png";
 const LIGHT_APP_ICON = "/favicon.png";
 
 function applyTheme(resolved: ResolvedTheme) {
