@@ -1,3 +1,4 @@
+import { UtensilsCrossed } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   categoryFallbackUrl,
@@ -6,27 +7,6 @@ import {
   type ImageRecipeLike,
   type ImageSize,
 } from "@/lib/recipe-image";
-import { ensureRecipeImage } from "@/lib/recipe-images.functions";
-
-// One lookup per recipe per page session, shared by every card showing it.
-const pending = new Map<string, Promise<string | null>>();
-
-function lookup(recipeId: string): Promise<string | null> {
-  let p = pending.get(recipeId);
-  if (!p) {
-    p = ensureRecipeImage({ data: { recipeId } })
-      .then((r) => r.imageUrl ?? null)
-      .catch(() => null);
-    pending.set(recipeId, p);
-  }
-  return p;
-}
-
-/** Stored photo is trusted only when it came from the verified image search. */
-function verifiedUrl(r: ImageRecipeLike): string | null {
-  return r.image_source && r.image_url ? r.image_url : null;
-}
-
 /**
  * Renders a recipe photo that always depicts the dish (or a neutral category
  * placeholder). Order: verified stored photo -> audited bundled photo ->
@@ -45,23 +25,19 @@ export function RecipeImage({
   priority?: boolean;
   alt?: string;
 }) {
-  const stored = verifiedUrl(recipe);
+  const stored = recipe.image_source && recipe.image_url ? recipe.image_url : null;
   const curated = curatedRecipeImageUrl(recipe, size);
   const fallback = categoryFallbackUrl(recipe);
   const initial = stored ?? curated ?? fallback;
   const [src, setSrc] = useState(initial);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     setSrc(initial);
-    if (stored || curated || !recipe.id) return;
-    let alive = true;
-    void lookup(recipe.id).then((url) => {
-      if (alive && url) setSrc(url);
-    });
-    return () => {
-      alive = false;
-    };
+    setFailed(false);
   }, [initial, stored, curated, recipe.id]);
+
+  if (src === fallback || failed) return <div role="img" aria-label={`Photo not available for ${recipe.name}`} className={`flex items-center justify-center bg-muted text-muted-foreground ${className ?? ""}`}><UtensilsCrossed className="h-10 w-10 opacity-40" /></div>;
 
   return (
     <img
@@ -72,7 +48,7 @@ export function RecipeImage({
       loading={priority ? "eager" : "lazy"}
       fetchPriority={priority ? "high" : "auto"}
       decoding="async"
-      onError={() => setSrc(curated ?? fallback)}
+      onError={() => { if (curated && src !== curated) setSrc(curated); else setFailed(true); }}
       className={className}
     />
   );

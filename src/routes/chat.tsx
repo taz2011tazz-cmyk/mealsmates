@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Crown, Loader2, Send, Sparkles, Wand2 } from "lucide-react";
-import { MascotMark } from "@/components/mealmate-logo";
+import { ChefMascot } from "@/components/chef-mascot";
+import { CookingInput } from "@/components/cooking-input";
 import { askFoodQuestion } from "@/lib/ai.functions";
 import { generateVisualExplanation, type VisualExplanation } from "@/lib/visual.functions";
 // Heavy media player (images + audio narration) — only loaded when a visual answer exists.
@@ -15,6 +16,7 @@ import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/chat")({
   component: ChatPage,
+  validateSearch: (search: Record<string, unknown>): { q?: string } => ({ q: typeof search["q"] === "string" ? search["q"].slice(0, 200) : undefined }),
   head: () => ({
     meta: [
       { title: "AI Food Chat & Visual Mode — MealMate" },
@@ -35,9 +37,9 @@ export const Route = createFileRoute("/chat")({
 });
 
 const SUGGESTIONS = [
-  "How does photosynthesis work?",
+  "What can I cook with chicken and rice?",
   "What can I substitute for buttermilk?",
-  "Explain intermittent fasting step by step",
+  "Give me a quick vegetarian dinner idea",
   "What pairs well with bunny chow?",
 ];
 
@@ -51,10 +53,13 @@ type Turn = {
 
 function ChatPage() {
   const { isPremium } = usePremium();
-  const [question, setQuestion] = useState("");
+  const { q } = Route.useSearch();
+  const [question, setQuestion] = useState(q ?? "");
+  const endRef = useRef<HTMLDivElement>(null);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [busy, setBusy] = useState(false);
-  const [visualMode, setVisualMode] = useState(true);
+  const [visualMode, setVisualMode] = useState(false);
+  useEffect(() => { if (turns.length) endRef.current?.scrollIntoView({ block: "end", behavior: "smooth" }); }, [turns, busy]);
 
   function patch(i: number, next: Partial<Turn>) {
     setTurns((t) => t.map((turn, idx) => (idx === i ? { ...turn, ...next } : turn)));
@@ -97,66 +102,29 @@ function ChatPage() {
 
   return (
     <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 py-10">
-      <div className="flex items-center gap-3">
-        <MascotMark className="h-12 w-12 shrink-0" alt="MealMate AI" />
-        <div>
-          <h1 className="font-display text-3xl leading-tight">AI Chat</h1>
-          <p className="text-sm text-muted-foreground">Ask anything — get an answer and a visual.</p>
-        </div>
-      </div>
+      {turns.length === 0 ? <div className="flex flex-col items-center py-6 text-center">
+        <ChefMascot animate className="h-48 w-48" />
+        <h1 className="mt-6 font-display text-3xl">Your little kitchen companion.</h1>
+        <p className="mt-3 text-sm text-muted-foreground">What's cooking, Chef?</p>
+      </div> : <h1 className="font-display text-2xl">MealMate Chef</h1>}
 
-      {isPremium ? (
-        <button
-          type="button"
-          onClick={() => setVisualMode((v) => !v)}
-          className={`md3-surface mt-5 flex items-center gap-3 rounded-2xl border p-3 text-left text-sm ${
-            visualMode ? "border-primary/40 bg-primary/5" : "border-border bg-card"
-          }`}
-        >
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-400/20 text-amber-600">
-            <Wand2 className="h-4 w-4" />
-          </span>
-          <span className="flex-1">
-            <span className="block font-medium">Visual Mode {visualMode ? "on" : "off"}</span>
-            <span className="block text-xs text-muted-foreground">
-              Narrated animated explainer, 16:9 + 9:16, downloadable.
-            </span>
-          </span>
-          <span
-            className={`h-6 w-10 rounded-full p-0.5 transition-colors ${visualMode ? "bg-primary" : "bg-muted"}`}
-          >
-            <span
-              className={`block h-5 w-5 rounded-full bg-background transition-transform ${visualMode ? "translate-x-4" : ""}`}
-            />
-          </span>
-        </button>
-      ) : (
-        <div className="mt-5 rounded-2xl border border-amber-400/40 bg-amber-400/5 p-4">
-          <p className="flex items-center gap-2 text-sm font-medium">
-            <Crown className="h-4 w-4 text-amber-500" /> Premium AI Visual Mode
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Every answer also becomes a 15–30s narrated animated video with AI illustrations,
-            subtitles, vertical + landscape versions and MP4 / image downloads.
-          </p>
-          <Button asChild size="sm" className="mt-3">
-            <Link to="/premium">Unlock Visual Mode</Link>
-          </Button>
-        </div>
-      )}
+      <div className="mt-4 flex justify-center">
+        {isPremium ? <Button variant="outline" className="rounded-full" aria-pressed={visualMode} onClick={() => setVisualMode((v) => !v)}><Wand2 /> Visual Mode {visualMode ? "on" : "off"}</Button> : <Button asChild variant="ghost" className="rounded-full text-muted-foreground"><Link to="/premium"><Crown /> Premium Visual Mode</Link></Button>}
+      </div>
 
       <div className="mt-8 flex-1 space-y-6">
         {turns.length === 0 && (
           <div className="flex flex-wrap gap-2">
             {SUGGESTIONS.map((s) => (
-              <button
+              <Button
+                variant="outline"
                 key={s}
                 type="button"
                 onClick={() => ask(s)}
                 className="rounded-full border border-border bg-card px-4 py-2 text-left text-sm transition-colors hover:bg-muted"
               >
                 {s}
-              </button>
+              </Button>
             ))}
           </div>
         )}
@@ -198,23 +166,10 @@ function ChatPage() {
         )}
       </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          ask(question);
-        }}
-        className="sticky bottom-24 mt-6 flex gap-2 rounded-full border border-border bg-card p-1.5 shadow-sm"
-      >
-        <Input
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Ask anything — food, nutrition, how things work…"
-          className="h-11 flex-1 rounded-full border-none bg-transparent shadow-none focus-visible:ring-0"
-        />
-        <Button type="submit" size="icon" disabled={busy} className="h-11 w-11 rounded-full">
-          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-        </Button>
-      </form>
+      <div ref={endRef} />
+      <div className="chat-composer sticky bottom-3 mt-6 bg-background pb-2 pt-2">
+        <CookingInput value={question} onChange={setQuestion} onSubmit={() => { void ask(question); }} busy={busy} />
+      </div>
       <p className="mt-2 flex items-center justify-center gap-1 text-center text-xs text-muted-foreground">
         <Sparkles className="h-3 w-3" /> AI answers can be wrong — use judgment for allergies and safety.
       </p>
