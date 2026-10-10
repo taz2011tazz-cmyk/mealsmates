@@ -75,8 +75,11 @@ function OnboardingPage() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>(INITIAL);
   const benefits = useMemo(() => benefitsFor(answers), [answers]);
-  const question = QUESTIONS[questionIndex];
-  if (!question) return null;
+  const question = QUESTIONS[questionIndex] ?? {
+    key: "cookingFrequency" as const,
+    title: "How often do you cook at home?",
+    options: ["Almost every day"] as const,
+  };
   const progress = stage === "quiz" ? ((questionIndex + 1) / QUESTIONS.length) * 100 : ((STAGES.indexOf(stage) + 1) / STAGES.length) * 100;
 
   function selected(option: string) {
