@@ -46,10 +46,18 @@ export const Route = createFileRoute("/recipe/$slug")({
       ? {
           meta: [
             { title: `${loaderData.name} — MealMate` },
-            { name: "description", content: loaderData.description ?? undefined },
+            { name: "description", content: loaderData.description ?? `View the ${loaderData.name} recipe on MealMate.` },
             { property: "og:title", content: `${loaderData.name} — MealMate` },
-            ...(loaderData.image_url
-              ? [{ property: "og:image", content: loaderData.image_url }]
+            { property: "og:description", content: loaderData.description ?? `View the ${loaderData.name} recipe on MealMate.` },
+            { property: "og:type", content: "article" },
+            { name: "twitter:card", content: "summary_large_image" },
+            { name: "twitter:title", content: `${loaderData.name} — MealMate` },
+            { name: "twitter:description", content: loaderData.description ?? `View the ${loaderData.name} recipe on MealMate.` },
+            ...(loaderData.image_url?.startsWith("https://")
+              ? [
+                  { property: "og:image", content: loaderData.image_url },
+                  { name: "twitter:image", content: loaderData.image_url },
+                ]
               : []),
           ],
         }

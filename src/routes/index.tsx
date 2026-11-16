@@ -104,6 +104,10 @@ function Index() {
   async function handleSearch(e: React.FormEvent) {
     e.preventDefault();
     if (!query.trim() || busy) return;
+    if (!user) {
+      void navigate({ to: "/recipes", search: { q: query.trim() } });
+      return;
+    }
     setBusy("search");
     try {
       const { slug } = await generateRecipe({ data: { query: query.trim() } });
@@ -126,6 +130,10 @@ function Index() {
 
   async function handleSurprise() {
     if (busy) return;
+    if (!user) {
+      void navigate({ to: "/auth" });
+      return;
+    }
     setBusy("surprise");
     try {
       const { slug } = await surpriseMe();

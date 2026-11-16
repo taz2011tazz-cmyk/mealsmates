@@ -7,6 +7,7 @@ import { recipesByCategoryQuery } from "@/lib/queries";
 import { generateRecipe, surpriseMe } from "@/lib/ai.functions";
 import { ensureRecipeImage } from "@/lib/recipe-images.functions";
 import { useServerFn } from "@tanstack/react-start";
+import { useSession } from "@/hooks/use-session";
 import { RecipeCard } from "@/components/recipe-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,6 +53,7 @@ function RecipesPage() {
   const { c, q } = Route.useSearch();
   const active = c ?? "All";
   const navigate = useNavigate();
+  const { user } = useSession();
   const { data: recipes } = useQuery(
     recipesByCategoryQuery(active !== "All" ? active : undefined, q),
   );
@@ -68,18 +70,24 @@ function RecipesPage() {
     try {
       await navigate({ to: "/recipes", search: { ...(active !== "All" ? { c: active } : {}), q: term } });
       const matches = await queryClient.fetchQuery(recipesByCategoryQuery(active !== "All" ? active : undefined, term));
-      for (const recipe of matches.slice(0, 6)) {
-        if (recipe.image_source && recipe.image_url) continue;
-        const result = await findImage({ data: { recipeId: recipe.id } });
-        if (result.reason === "no_provider" || result.reason === "rate_limited") break;
+      if (user) {
+        for (const recipe of matches.slice(0, 6)) {
+          if (recipe.image_source && recipe.image_url) continue;
+          const result = await findImage({ data: { recipeId: recipe.id } });
+          if (result.reason === "no_provider" || result.reason === "rate_limited") break;
+        }
+        await queryClient.invalidateQueries({ queryKey: ["recipes"] });
       }
-      await queryClient.invalidateQueries({ queryKey: ["recipes"] });
     } catch { toast.error("Couldn't complete the search. Please try again."); }
     finally { setBusy(false); }
   }
 
   async function handleAiGenerate() {
     if (!query.trim() || busy) return;
+    if (!user) {
+      void navigate({ to: "/auth" });
+      return;
+    }
     setBusy(true);
     try {
       const { slug } = await generateRecipe({ data: { query: query.trim() } });
@@ -99,6 +107,10 @@ function RecipesPage() {
 
   async function handleSurprise() {
     if (busy) return;
+    if (!user) {
+      void navigate({ to: "/auth" });
+      return;
+    }
     setBusy(true);
     try {
       const { slug } = await surpriseMe();
