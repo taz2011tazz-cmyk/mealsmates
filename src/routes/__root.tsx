@@ -25,6 +25,7 @@ import { LocaleProvider } from "@/components/locale-provider";
 import { UpgradeModalProvider } from "@/components/upgrade-modal";
 import { useSession } from "@/hooks/use-session";
 import { useShellMetrics } from "@/hooks/use-shell-metrics";
+import { isPublicMealMateRoute } from "@/lib/route-access";
 
 function NotFoundComponent() {
   return (
@@ -168,7 +169,7 @@ function RootComponent() {
   useShellMetrics(showAppHeader ? "with-header" : "no-header");
 
   useEffect(() => {
-    if (!user || pathname === "/onboarding" || pathname.startsWith("/auth") || pathname === "/reset-password") return;
+    if (!user || isPublicMealMateRoute(pathname) || pathname === "/onboarding" || pathname.startsWith("/auth") || pathname === "/reset-password") return;
     let active = true;
     supabase
       .from("profiles")
