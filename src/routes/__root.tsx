@@ -23,9 +23,9 @@ import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LocaleProvider } from "@/components/locale-provider";
 import { UpgradeModalProvider } from "@/components/upgrade-modal";
-import { hasSeenTour } from "@/lib/preferences";
 import { useSession } from "@/hooks/use-session";
 import { useShellMetrics } from "@/hooks/use-shell-metrics";
+import { isPublicMealMateRoute } from "@/lib/route-access";
 
 function NotFoundComponent() {
   return (
@@ -168,14 +168,8 @@ function RootComponent() {
   const showAppHeader = pathname !== "/" && !isMarketplace && !isFlow;
   useShellMetrics(showAppHeader ? "with-header" : "no-header");
 
-  // First open (signed out): welcome + tour. Signed in without onboarding: personal setup.
   useEffect(() => {
-    if (user || pathname !== "/") return;
-    if (!hasSeenTour()) void router.navigate({ to: "/welcome", replace: true });
-  }, [pathname, router, user]);
-
-  useEffect(() => {
-    if (!user || pathname === "/onboarding" || pathname.startsWith("/auth") || pathname === "/reset-password") return;
+    if (!user || isPublicMealMateRoute(pathname) || pathname === "/onboarding" || pathname.startsWith("/auth") || pathname === "/reset-password") return;
     let active = true;
     supabase
       .from("profiles")

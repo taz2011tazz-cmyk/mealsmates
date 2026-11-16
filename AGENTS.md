@@ -16,3 +16,4 @@
 
 - RecipeImage renders stored/curated media only; explicit search events call authenticated ensureRecipeImage and bulk backfill stays disabled, preventing browse-driven image costs.
 - The shared bottom navigation always has exactly Home, Dining, AI Chef, Planner, and Profile; Pantry remains accessible through AI Chef.
+- AuthGate allowlists only public recipe discovery, recipe details, and Dining browse routes; personal routes and actions remain signed-in. Why: guest browsing must not expose account-owned data or mutations.
