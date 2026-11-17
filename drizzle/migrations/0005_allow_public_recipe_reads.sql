@@ -1,0 +1,1 @@
+GRANT SELECT ON TABLE public.recipes TO anon, authenticated;
