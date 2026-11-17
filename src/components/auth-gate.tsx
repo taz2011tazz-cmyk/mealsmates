@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { isPublicMealMateRoute } from "@/lib/route-access";
+import { AuthForm } from "@/components/auth-form";
 
 // Inactive sessions are signed out after this window.
 const INACTIVITY_MS = 30 * 60 * 1000; // 30 minutes
@@ -65,18 +66,15 @@ export function AuthGate({ children }: { children: ReactNode }) {
 }
 
 function SignInPrompt() {
-  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
   return (
     <main className="flex flex-1 items-center justify-center px-4 py-16">
       <div className="w-full max-w-md rounded-3xl border border-border bg-card p-8 text-center shadow-sm">
         <h1 className="font-display text-2xl">Sign in to continue</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Create your free MealMate account to unlock your personalised recipes, meal plans
-          and restaurant picks.
+          Sign in or create an account to access your personal MealMate features.
         </p>
-        <Button className="mt-6 w-full" onClick={() => navigate({ to: "/auth" })}>
-          Create account or sign in
-        </Button>
+        <div className="mt-6"><AuthForm redirectTo={pathname} /></div>
       </div>
     </main>
   );
