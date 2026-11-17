@@ -10,4 +10,4 @@
 - [x] Adapt the supplied personalized onboarding journey to MealMate’s existing account, preferences, and real subscription flow.
 - [x] Allow public recipe browsing while keeping personal MealMate features account-protected.
 
-- [ ] Remove the dedicated authentication page while preserving account sign-in for protected personal features.
+- [x] Remove the dedicated authentication page while preserving account sign-in for protected personal features.

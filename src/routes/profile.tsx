@@ -186,7 +186,7 @@ function SettingsPage() {
       return;
     }
     toast.success("Signed out");
-    navigate({ to: "/auth", replace: true });
+    navigate({ to: "/", replace: true });
   }
 
   async function share() {
