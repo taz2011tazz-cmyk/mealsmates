@@ -9,3 +9,5 @@
 - [x] Test all five tabs, back navigation, AI Chef controls, and Pantry access from AI Chef.
 - [x] Adapt the supplied personalized onboarding journey to MealMate’s existing account, preferences, and real subscription flow.
 - [x] Allow public recipe browsing while keeping personal MealMate features account-protected.
+
+- [x] Remove the dedicated authentication page while preserving account sign-in for protected personal features.

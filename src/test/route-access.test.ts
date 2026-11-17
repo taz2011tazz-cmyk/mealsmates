@@ -10,7 +10,7 @@ describe("MealMate guest route access", () => {
 
   it("allows Dining browsing while keeping personal pages protected", () => {
     expect(isPublicMealMateRoute("/restaurants")).toBe(true);
-    expect(isPublicMealMateRoute("/restaurant/local-cafe")).toBe(true);
+    expect(isPublicMealMateRoute("/restaurant/local-cafe")).toBe(false);
     expect(isPublicMealMateRoute("/planner")).toBe(false);
     expect(isPublicMealMateRoute("/pantry")).toBe(false);
     expect(isPublicMealMateRoute("/profile")).toBe(false);

@@ -10,7 +10,7 @@ const PUBLIC_EXACT_PATHS = new Set([
   "/support",
 ]);
 
-const PUBLIC_PREFIX_PATHS = ["/recipe/", "/restaurant/", "/legal/"];
+const PUBLIC_PREFIX_PATHS = ["/recipe/", "/legal/"];
 
 export function isPublicMealMateRoute(pathname: string): boolean {
   return (
