@@ -11,3 +11,4 @@
 - [x] Allow public recipe browsing while keeping personal MealMate features account-protected.
 
 - [x] Remove the dedicated authentication page while preserving account sign-in for protected personal features.
+- [ ] Remove sign-in requirements across MealMate and make requested shared features public, without exposing credentials, billing records, or account identifiers.
